@@ -1,0 +1,64 @@
+<?php
+if ($this->language == 'en') {
+    $subject = 'subject_en';
+    $content = 'content_en';
+} else {
+    $subject = 'subject';
+    $content = 'content';
+}
+?>
+
+<h2><?php echo Ct_Translate::_('news'); ?></h2>
+<?php echo $this->intContent; ?>
+<ul class="news-list">
+
+    <?php if ($this->twitterNews) : ?>
+
+        <?php foreach ($this->twitterNews as $news) : ?>
+		<li>
+			<p><span class="news-date"><?php echo date("m/d/y", strtotime($news['created_at'])); ?></span></p>
+			<p class="news-text">
+				<?php echo nl2br($this->escape($news['text'], 50)); ?>
+			</p>
+		</li>
+        <?php endforeach; ?>
+        
+    <?php else : ?>
+        <?php if (count($this->paginator)): ?>
+            <?php foreach ($this->paginator as $news): ?>
+            <li class="news_li_item">
+                <?php
+                $videos = new Admin_Model_NewsVideosService();
+                $news_videos = $videos->getVideos($news['id']);
+
+                $images = new Admin_Model_NewsImagesService();
+                $news_images = $images->getImages($news['id']);
+
+                $documents = new Admin_Model_NewsDocumentsService();
+                $news_documents = $documents->getDocuments($news['id']);
+                if (sizeof($news_videos) > 0) {
+                    ?>
+                    <img class="news_image_thumb" src="/uploads/news/video/thumbs/<?php echo preg_replace("/\.[a-z0-9]+$/",".jpg",$news_videos[0]['nv_video']); ?>" alt=""/>
+                    <?php } elseif (sizeof($news_images) > 0) { ?>
+                    <img class="news_image_thumb" src="/uploads/news/thumbs/<?php echo $news_images[0]['ni_image'] ?>" alt=""/>
+                    <?php } elseif (sizeof($news_documents) > 0) { ?>
+                    <img class="news_image_thumb" src="/img/pdfIcon.jpg" alt=""/>
+                    <?php } else { ?>
+                    <img class="news_image_thumb" src="/img/default/no-preview-small.png" alt=""/>
+                    <?php }?>
+                <p><a href="<?php echo $this->url(array('action' => 'view', 'controller' => 'news', 'module' => 'default', 'language'=>$this->language, 'id'=>$news['id']),'default'); ?>" class="news-title"><?php echo $this->escape($news[$subject]); ?></a> <span class="news-date"><?php echo date("m/d/y", strtotime($news['date'])); ?></span></p>
+                <p class="news-text">
+                    <?php echo Ct_View_Helper_Truncate::htmlToPlain($news[$content], 50) ?>
+                    <a href="<?php echo $this->url(array('action' => 'view', 'controller' => 'news', 'module' => 'default', 'language'=>$this->language, 'id'=>$news['id']),'default'); ?>"><?php echo Ct_Translate::_('continue_reading'); ?></a>
+                </p>
+            </li>
+            <?php endforeach; ?>
+            <li>
+                <?php echo $this->paginationControl($this->paginator,
+                                        'Sliding',
+                                        '_pagination.phtml',
+                                        array('controller'=>$this->controller, 'module'=>$this->module, 'action'=>$this->action)); ?>
+            </li>
+        <?php endif; ?>
+    <?php endif; ?>
+</ul>

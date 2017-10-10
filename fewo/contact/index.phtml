@@ -1,0 +1,25 @@
+<a href="#<?= $this->form->getId() ?>"><?php echo Ct_Translate::_('contact_form') ?></a>
+<?php $form = $this->form; echo $this->intContent; ?>
+<div class="contact-box">
+
+<script type="text/javascript">
+<!--
+$(document).ready(function() {
+	$('#<?= $this->form->getId() ?>').submitForm({}, function() {Recaptcha.reload();});
+});
+//-->
+</script>
+
+<div style="width: 740px;" class="default-form-box">
+<form id="<?= $form->getId() ?>" name="<?= $form->getName() ?>" method="<?= $form->getMethod() ?>" action="<?= $form->getAction() ?>">
+    <?php echo $this->form->name; ?>
+    <?php echo $this->form->email; ?>
+    <?php echo $this->form->subject; ?>
+    <?php echo $this->form->message; ?>
+    <?php echo $this->form->captcha; ?>
+    <div class="at-error-msg" id="id_captcha"></div>
+    <?php echo $this->form->send; ?>
+</form>
+</div>
+
+</div>

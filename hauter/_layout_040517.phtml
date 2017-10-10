@@ -1,0 +1,274 @@
+<?php echo $this->doctype(); ?>
+<html class="desktop mbr-site-loaded">
+
+    <head>
+        <!-- Site made with Mobirise Website Builder v3.11.1, https://mobirise.com -->
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <?php
+            if (isset($this->metaDescription) && $this->metaDescription) {
+                $this->headMeta()->appendName('description', $this->metaDescription);
+            }
+            echo $this->headMeta();
+        ?>
+        <?php echo $this->headStyle(); ?>
+        <?php echo $this->headLink(); ?>
+        <?php
+            $title = Default_Model_UserService::i()->getDomainSetting($this->domainId, 'title_'.$this->language);
+            if ($this->title) {
+                $title .= ' - '.$this->title;
+            }
+            echo $this->headTitle($title);
+        ?>
+        <?php
+            $link = $this->headLink()->prependStylesheet($this->baseUrl('/css/jquery/ui-lightness/jquery-ui-1.8.4.custom.css'))
+                        ->headLink(
+                            array(
+                                'rel' => 'SHORTCUT ICON',
+                                'type' => 'image/x-icon',
+                                'href' => $this->baseUrl('/img/'.$this->theme.'/favico.ico')
+                            ),
+                            'PREPEND');
+                        
+            if (isset($this->theme) && ($this->theme)) {
+                $link->appendStylesheet('https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic&amp;subset=latin')
+                    ->appendStylesheet($this->baseUrl('/plugins/bootstrap_fewo/css/bootstrap.min.css')) 
+                    ->appendStylesheet($this->baseUrl('/plugins/blueimp-gallery/css/blueimp-gallery.css'))
+                    ->appendStylesheet($this->baseUrl('/plugins/dropdown/css/style.css'))
+                    ->appendStylesheet($this->baseUrl('/css/'.$this->theme.'/style.css'))
+                    ->appendStylesheet($this->baseUrl('/plugins/mobirise/css/mbr-additional.css'));
+                  
+            } else {
+                $link->prependStylesheet($this->baseUrl('/css/default/main.css'));
+                
+            }
+
+            echo $link;
+        ?>
+    
+        <?php
+            $script = $this->headScript()->prependFile($this->baseUrl('/js/jquery/jquery-1.12.4.min.js'))
+                                      ->appendFile($this->baseUrl('/js/jquery/ui/jquery-ui-1.8.4.custom.min.js'))
+                                      ->appendFile($this->baseUrl('/js/ct.form.js'))
+                                      ->appendFile($this->baseUrl('/js/jquery/jquery.form.js'))
+                                      ->appendFile($this->baseUrl('/js/jquery/jquery-cookie.js'))
+                                      ->appendFile($this->baseUrl('/js/default.js'))
+                                      ->appendFile($this->baseUrl('/js/admin-main.js'))
+                                      ->appendFile($this->baseUrl('/js/jarallax/jarallax.js'));
+                                      
+
+            // if (($this->domainId>0) && (($this->showTopbar) || (($this->controller == 'index') && ($this->action=='index') ) )) {
+            //     $script->appendFile($this->baseUrl('/js/random.js'));
+            // }
+
+            echo $script;
+
+        ?>
+
+        <?php if (($this->domainId>0) && ($googleAnalytics = Default_Model_UserService::i()->getDomainSetting($this->domainId, 'google_analytics'))) : ?>
+
+            <script type="text/javascript">
+
+              var _gaq = _gaq || [];
+              _gaq.push(['_setAccount', '<?php echo $this->escape($googleAnalytics); ?>']);
+              _gaq.push(['_gat._anonymizeIp']);
+              _gaq.push(['_trackPageview']);
+
+              (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+              })();
+
+            </script>
+
+        <?php endif; ?>
+        
+    </head>
+<body>
+    <section id="ext_menu-0">
+
+        <nav class="navbar navbar-dropdown navbar-fixed-top" id="header">
+            <div class="container">
+
+                <div class="mbr-table">
+                    <div class="mbr-table-cell sendwich-menu dropdown">
+
+                        <button class="navbar-toggler pull-xs-left dropdown-menu-bar" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <div class="hamburger-icon"></div>
+                        </button>
+
+                    </div>
+                    <div class="dropdown-menu1" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="<?php echo $this->url(array('action'=>'index', 'controller'=>'index', 'module' => 'default'), 'default')?>#aboutme"><?php echo strtoupper(Ct_Translate::_('about-me')); ?></a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="<?php echo $this->url(array('action'=>'index', 'controller'=>'index', 'module' => 'default'), 'default')?>#trainingandeducation"><?php echo strtoupper(Ct_Translate::_('training&education')); ?></a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="<?php echo $this->url(array('action'=>'index', 'controller'=>'index', 'module' => 'default'), 'default')?>#horsesforsale"><?php echo strtoupper(Ct_Translate::_('horses-for-sale')); ?></a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="<?php echo $this->url(array('action'=>'index', 'controller'=>'index', 'module' => 'default'), 'default')?>#contacts"><?php echo strtoupper(Ct_Translate::_('contact')); ?></a>
+                    </div>
+                    <div class="mbr-table-cell header-bar">
+
+                        <div class="navbar-brand">
+                            <a href="<?php echo $this->url(array('action'=>'index', 'controller'=>'index', 'module' => 'default'), 'default')?>" class="navbar-logo">
+                                <img src="/uploads/logos/image_82_hauter-logo.png" alt="<?php echo $this->settings['title_'.$this->language] ?>" title="<?php echo $this->settings['title_'.$this->language] ?>">
+                            </a>
+                            <a class="navbar-caption" href="<?php echo $this->url(array('action'=>'index', 'controller'=>'index', 'module' => 'default'), 'default')?>"><p class="title-logo" title="HAUTER SPORTHORSES" alt="HAUTER SPORTHORSES">HAUTER SPORTHORSES</p><p class="title-logo-sub" >THE JUMP TO THE EXCELLENCE</p></a>
+                            
+                        </div>
+
+                    </div>
+                    
+                    
+                    <div class="mbr-table-cell lang-bar">
+                        <ul class="nav-dropdown collapse pull-xs-right nav navbar-nav" id="">
+                        
+                            <?php foreach ($this->headerMenu as $menuItem) : ?><!--<li class="nav-item" id="lang">-->
+                                <li class="nav-item <?php echo isset($menuItem['class'])?$menuItem['class']:'' ?> <?php if($menuItem['selected']): ?>selected<?php endif ?>" id="lang">
+                                <a class="nav-link link" href="<?php echo $menuItem['href'] ?>" title="<?php echo $this->escape($menuItem['title']) ?>" <?php if(isset($menuItem['target'])): ?>target="<?php echo $menuItem['target'] ?>"<?php endif ?>><?php echo empty($menuItem['label']) ? '&nbsp' : $this->escape($menuItem['label']) ?></a></li>
+                            <?php endforeach ?>
+                            
+                        </ul>
+                        <button class="navbar-toggler navbar-close" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar" hidden="">
+                            <div class="close-icon"></div>
+                        </button>
+
+                    </div>
+                </div>
+
+            </div>
+        </nav>
+
+    </section>
+    <section class="content">
+        <div><?php echo $this->layout()->content ?></div> 
+    </section>
+    
+
+    <section class="mbr-section mbr-footer" id="contacts">
+        
+        <div class="container">
+            <div class="row">
+                <div class="mbr-footer-content col-xs-12 col-md-3">
+                    <h6>HAUTER SPORTHORSES</h6>
+                    <h6>Steffen Hauter</h6>
+                    <div class="article-footer">
+                        <p>Grosssteinhausermuehle 2</p>
+                        <p>66484 Grosssteinhausen</p>
+                        <p>Germany</p>
+                    </div>
+                    <div class="article-footer">
+                        <p><?php echo Ct_Translate::_('mobile'); ?>: +49 (0) 163 281 7106 </p>
+                        <p><?php echo Ct_Translate::_('phone'); ?>: +49 (0) 6339 281</p>
+                    </div>
+                    <div class="article-footer">
+                        <p>info@hauter-sporthorses.com</p>
+                    </div>
+                    <div class="article-footer copyright">
+                        <p>&#169; <?php echo date("Y")?> HAUTER SPORTHORSES</p>
+                    </div>
+                </div>
+
+                <div class="mbr-footer-content col-xs-12 col-md-3">
+                    <ul>
+                        <li><a href="<?php echo $this->url(array('action'=>'index', 'controller'=>'index', 'module' => 'default'), 'default')?>#aboutme"><?php echo strtoupper(Ct_Translate::_('about-me')) ; ?></a></li>
+                        <li><a href="<?php echo $this->url(array('action'=>'index', 'controller'=>'index', 'module' => 'default'), 'default')?>#trainingandeducation"><?php echo strtoupper(Ct_Translate::_('training&education')) ; ?></a></li>
+                        <li><a href="<?php echo $this->url(array('action'=>'index', 'controller'=>'index', 'module' => 'default'), 'default')?>#horsesforsale"><?php echo strtoupper(Ct_Translate::_('horses-for-sale')) ; ?></a></li>
+                    </ul>
+                </div>
+                <div class="mbr-footer-content col-xs-12 col-md-3">
+                    <ul>
+                        <li><a href="#"><?php echo strtoupper(Ct_Translate::_('press')) ; ?></a></li>
+                        <li><a href="#"><?php echo strtoupper(Ct_Translate::_('links')) ; ?></a></li>
+                        
+                    </ul>
+                </div>
+                <div class="mbr-footer-content col-xs-12 col-md-3">
+                    <ul>
+                        <li><a href="<?php echo $this->mainMenu[0]['url'] ?>"><?php echo strtoupper(Ct_Translate::_('contact-us')); ?></a> 
+                            
+                        </li>
+                        <li><a href="<?php echo $this->url(array('action'=>'index', 'controller'=>'index', 'module' => 'default'), 'default')?>#location"><?php echo strtoupper(Ct_Translate::_('location')); ?></a></li>
+                        <li><a href="<?php echo $this->footerMenu[0]['url'] ?>"><?php echo strtoupper($this->footerMenu[0]['title']) ?></a></li>
+                        
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+            
+    <script type="text/javascript">
+        /* init Jarallax */
+        jarallax(document.querySelectorAll('.jarallax'), {});
+        
+    </script>
+
+    <!--<script src="<?php echo $this->baseUrl('/js/jquery/jquery-1.12.4.min.js') ?>"></script>-->
+    <script src="<?php echo $this->baseUrl('/plugins/bootstrap_fewo/js/bootstrap.min.js') ?>"></script>
+    <script src="<?php echo $this->baseUrl('/plugins/dropdown/js/script.min.js') ?>"></script>
+    <script src="<?php echo $this->baseUrl('/plugins/jquery.touchSwipe/jquery.touchSwipe.min.js') ?>"></script>
+    <script src="<?php echo $this->baseUrl('/js/hauter/script.js') ?>"></script>
+    <script src="<?php echo $this->baseUrl('/js/hauter/hauter.js') ?>"></script>
+    
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#contact_form').submitForm({}, function() {});
+        });
+        
+    </script>
+    <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">
+        <div class="slides"></div>
+        <h3 class="title"></h3>
+        <a class="prev">‹</a>
+        <a class="next">›</a>
+        <a class="close">×</a>
+        <a class="play-pause"></a>
+        <ol class="indicator"></ol>
+    </div>
+    <script src="/plugins/blueimp-gallery/js/jquery.blueimp-gallery.js"></script>
+    <?php if ($this->showSlider) : ?>
+        <script>
+            blueimp.Gallery(
+                document.getElementById('frames').getElementsByTagName('a'), {
+                    container: '#blueimp-gallery-carousel',
+                    carousel: true,
+                    slideshowInterval: <?php echo (isset($this->domainOptions['SLIDER']['slider_rotation_delay']) and ((int)$this->domainOptions['SLIDER']['slider_rotation_delay']>0)) ? (int)$this->domainOptions['SLIDER']['slider_rotation_delay']*1000 : 3000 ?>,
+                    stretchImages: <? echo isset($this->domainOptions['SLIDER']['resize_type']) ? ($this->domainOptions['SLIDER']['resize_type'] == 'STRETCH' ? 'true' : ($this->domainOptions['SLIDER']['resize_type'] == 'COVER' ? '\'cover\'' : 'false')) : 'false' ?>,
+                    onslide: function() {
+                        var $caption = $('#blueimp-gallery-carousel .caption');
+                        $caption.animate({'bottom': '-'+$caption.height()+'px'}, function(){});
+                        $caption.find('.icons .icon').hide('slow');
+                    },
+                    onslideend: function(index, slide) {
+                        var $frame = $('#rotator #frames .frame:eq('+index+')');
+                        var $href = $frame.attr('data-href');
+                        var $caption = $('#blueimp-gallery-carousel .caption');
+                        var $title = $frame.find('.title').html();
+                        if ($title)
+                        {
+                            if ($href==undefined) {
+                                $caption.find('.title-normal').html($title);
+                                $caption.find('.title-short').html($frame.find('.title-short').html());
+                            } else {
+                            $caption.find('.title-normal').html('<a href="'+$href+'">'+$title+'</a>');
+                            $caption.find('.title-short').html('<a href="'+$href+'">'+$frame.find('.title-short').html()+'</a>');
+                            }
+                            
+                            $caption.find('.description').html($frame.find('.description').html());
+                            if ($frame.attr('data-photo') == '1') $caption.find('.icons .icon-photo').attr('href', $href+'#photos').show('slow');
+                            if ($frame.attr('data-video') == '1') $caption.find('.icons .icon-video').attr('href', $href+'#videos').show('slow');
+                            $caption.animate({'bottom': 0});
+                        }
+                    }
+                }
+            );
+        </script>
+    <?php endif ?>
+    <div id="scrollToTop" class="scrollToTop mbr-arrow-up" style="display: none;"><a style="text-align: center;"><i class="mbr-arrow-up-icon"></i></a></div>
+</body>
+</html>

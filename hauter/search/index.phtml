@@ -1,0 +1,141 @@
+
+<div class="separate-page-header article">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <h3 class="mbr-section-title display-2"><?php echo $this->title ?></h3>
+                
+            </div>  
+        </div>
+    </div>
+</div>
+
+
+<div class="separate-page">
+    
+        
+    <?php
+        $levels = Admin_Model_HorseService::i()->getLevelOptions();
+        $prices = Admin_Model_HorseService::i()->getPriceOptions($this->domainId);
+        $colors = Admin_Model_HorseService::i()->getColorOptions();
+        $sexes = Admin_Model_HorseService::i()->getSexOptions();
+        function composeURL($params, $arrayName) {
+            $tempParams = array();
+            if (is_array($params))
+            {
+                foreach ($params as $k=>$v) {
+                    $tempParams[] = $arrayName.'['.$k.']='.$v;
+                }
+            }
+            $url = implode('&', $tempParams);
+            return $url;
+        }
+        $pagerParams = composeURL($this->filter, 'filter');
+        $categories = Admin_Model_HorseService::i()->getCategoryOptions();
+        $singCatNames = Admin_Model_HorseService::i()->getSingularCategoryNames();
+        $sexes = Admin_Model_HorseService::i()->getSexOptions();
+        $colors = Admin_Model_HorseService::i()->getColorOptions();
+    ?>
+    <?php echo $this->paginationControl($this->paginator, 'Sliding', '_pagination.phtml', array('controller'=>$this->controller, 'module'=>$this->module, 'action'=>$this->slug, 'params'=>$pagerParams)) ?>
+        <?php if (count($this->paginator)): ?>
+            <?php if ($this->horsesViewMode == 'gallery') : ?>
+                <div class="container-fluid container-gallery container-gallery-thumbs container-gallery-horses">
+                    <div class="row">
+                        <?php foreach ($this->paginator as $horse) : ?>
+                            <div class="col col-lg-4 col-md-6 col-sm-12 col-xs-12 hfs-article">
+                                <div class="col-inner">
+                                    <div class="caption">
+                                        <?php if ($horse['category_id'] == 5  or  $horse['category_id'] == 6) : ?>
+                                            <p class="name successful"><a href="<?php echo Ct_View_Helper_Horses::horsePageUrl($horse) ?>"><?php echo mb_strtoupper($this->escape($horse['name']), 'utf8') ?></a></p>
+                                        <?php else : ?>
+                                            <p class="category"><?php echo $this->escape($singCatNames[$horse['category_id']]) ?></p>
+                                            <p class="name"><a href="<?php echo Ct_View_Helper_Horses::horsePageUrl($horse) ?>"><?php echo mb_strtoupper($this->escape($horse['name']), 'utf8') ?></a></p>
+                                            <p>
+                                                <strong><?php echo Ct_Translate::_('age') ?>:</strong> <?php echo (date('Y') - $this->escape($horse['age'])) ?>
+                                                <?php
+                                                    $height = $horse['height'].Ct_Translate::_('cm');
+                                                    if ($this->language == 'en') $height = number_format($horse['height']*0.0984, 2).' '.Ct_Translate::_('hands');
+                                                ?>
+                                                &nbsp&nbsp/&nbsp&nbsp
+                                                <strong><?php echo Ct_Translate::_('height') ?>:</strong> <?php echo $height ?>
+                                            </p>
+                                            <p><strong><?php echo Ct_Translate::_('level') ?>:</strong> <?php echo $levels[$horse['level']] ?></p>
+                                        <? endif ?>
+                                        <ul class="icons">
+                                            <?php if($horse['filename']): ?><li class="photo">
+                                                <a class="icon-video-small" href="<?php echo Ct_View_Helper_Horses::horsePageUrl($horse) ?>#photos" title="<?php echo Ct_Translate::_('photos') ?>"></a>
+                                            </li><?php endif ?><?php if($horse['video_id']): ?><li class="video">
+                                                <a class="icon-photo-small" href="<?php echo Ct_View_Helper_Horses::horsePageUrl($horse) ?>#videos" title="<?php echo Ct_Translate::_('videos') ?>"></a>
+                                            </li><?php endif ?>
+                                        </ul>
+                                    </div>
+                                    <a class="thumb <?php echo $this->sepia; ?>" href="<?php echo Ct_View_Helper_Horses::horsePageUrl($horse) ?>" <?php if(!empty($horse['name'])): ?>title="<?php echo $this->escape($horse['name']) ?>"<?php endif ?> style="background-image: url('<?php echo Ct_View_Helper_Horses::coverMediumImageUrl($horse) ?>')"></a>
+                                </div>
+                            </div>
+                        <?php endforeach ?>
+                    </div>
+                </div>
+            <?php else : ?>
+                <div class="container horses-for-sale">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <?php echo $this->intContent ?>
+                        </div>
+                    </div>
+                    <?php foreach ($this->paginator as $horse) : ?>
+                        <div class="row">
+                            <div class="col-md-3 col-sm-6 col-xs-12" style="text-align: center;">
+                                <a class="img <?php echo $this->sepia; ?> card-img" href="<?php echo Ct_View_Helper_Horses::horsePageUrl($horse) ?>" style="background: url('<?php echo Ct_View_Helper_Horses::coverMediumImageUrl($horse) ?>') no-repeat center center; background-size: cover;" title="<?php echo Ct_View_Helper_Horses::seoText($horse) ?>"></a>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12 hfs-article">
+                                <p class="title"><a href="<?php echo Ct_View_Helper_Horses::horsePageUrl($horse) ?>"><?php echo mb_strtoupper($this->escape($horse['name']), 'utf8') ?></a></p>
+                                <?php if ($horse['category_id'] == 5) : ?>
+                                    <?php $semenTypes = Admin_Model_HorseService::i()->getSemenTypeOptions() ?>
+                                    <p><strong><?php echo Ct_Translate::_('breeding_area'); ?>:</strong> <?php echo $this->escape($horse['breeding_area']) ?></p>
+                                    <p><strong><?php echo Ct_Translate::_('color') ?>:</strong> <?php echo $this->escape($colors[$horse['color']]) ?></p>
+                                    <p><strong><?php echo Ct_Translate::_('age') ?>:</strong> <?php echo (date('Y') - $this->escape($horse['age'])) ?></p>
+                                    <p><strong><?php echo Ct_Translate::_('height') ?>:</strong> <?php echo $this->escape(($this->language == 'en') ? (number_format($horse['height']*0.0984, 2).' '.Ct_Translate::_('hands')) : ($horse['height'].Ct_Translate::_('cm'))) ?></p>
+                                    <p><strong><?php echo Ct_Translate::_('semen_type') ?>:</strong> <?php echo $this->escape($semenTypes[$horse['semen_type']]) ?></p>
+                                <?php elseif ($horse['category_id'] == 6) : ?>
+                                    <p><strong><?php echo Ct_Translate::_('pedigree'); ?>:</strong> <?php echo $this->escape(Ct_View_Helper_Horses::pedigree($horse['father'], $horse['mothers_father'])) ?></p>
+                                    <p><strong><?php echo Ct_Translate::_('breeding_area'); ?>:</strong> <?php echo $this->escape($horse['breeding_area']) ?></p>
+                                <?php else : ?>
+                                    <? /*<p><strong><?php echo Ct_Translate::_('category'); ?>:</strong> <?php echo $this->escape($categories[$horse['category_id']]) ?></p>*/ ?>
+                                    <? /*<p><strong><?php echo Ct_Translate::_('sex') ?>:</strong> <?php echo $this->escape($sexes[$horse['sex']]) ?></p>*/ ?>
+                                    <p><strong><?php echo Ct_Translate::_('level') ?>:</strong> <?php echo $this->escape($levels[$horse['level']]) ?></p>
+                                    <p><strong><?php echo Ct_Translate::_('age') ?>:</strong> <?php echo (date('Y') - $this->escape($horse['age'])) ?></p>
+                                    <? /*<p><strong><?php echo Ct_Translate::_('color') ?>:</strong> <?php echo $this->escape($colors[$horse['color']]) ?></p>*/ ?>
+                                    <p><strong><?php echo Ct_Translate::_('height') ?>:</strong> <?php echo $this->escape(($this->language == 'en') ? (number_format($horse['height']*0.0984, 2).' '.Ct_Translate::_('hands')) : ($horse['height'].Ct_Translate::_('cm'))) ?></p>
+                                    <p><strong><?php echo Ct_Translate::_('father'); ?>:</strong> <?php echo $this->escape($horse['father']) ?></p>
+                                    <p><strong><?php echo Ct_Translate::_('mothers_father'); ?>:</strong> <?php echo $this->escape($horse['mothers_father']) ?></p>
+                                <?php endif ?>
+                                <p class="more"><a href="<?php echo Ct_View_Helper_Horses::horsePageUrl($horse) ?>">+ <?php echo Ct_Translate::_('more_info'); ?></a></p>
+                            </div>
+                            <div class="col-md-6 col-sm-12 col-xs-12 hfs-article">
+                                <?php if($horse['video_id']): ?>
+                                    <a class="icon icon-video" style="float: right;" href="<?php echo Ct_View_Helper_Horses::horsePageUrl($horse) ?>#videos" title="<?php echo Ct_Translate::_('videos') ?>"></a>
+                                <?php endif ?>
+                                <?php if($horse['filename']): ?>
+                                    <a class="icon icon-photo" style="float: right;" href="<?php echo Ct_View_Helper_Horses::horsePageUrl($horse) ?>#photos" title="<?php echo Ct_Translate::_('photos') ?>"></a>
+                                <?php endif ?>
+                                <?php if ($horse['category_id'] != 5  and  $horse['category_id'] != 6) : ?>
+                                    <?php $successes = $this->language == 'en' ? $horse['successes_en'] : $horse['successes'] ?>
+                                    <p style="text-align: justify"><?php echo Ct_View_Helper_Truncate::trunc($successes, 100) ?></p>
+                                <?php elseif ($horse['category_id'] == 6) : ?>
+                                    <?php $description = $this->language == 'en' ? $horse['description_en'] : $horse['description'] ?>
+                                    <p style="text-align: justify"><?php echo Ct_View_Helper_Truncate::trunc($description, 100) ?></p>
+                                <?php endif ?>
+                            </div>
+                            
+                        </div>
+                    <?php endforeach ?>
+                    
+                </div>
+            <?php endif ?>
+        <?php endif ?>
+        
+    <?php echo $this->paginationControl($this->paginator, 'Sliding', '_pagination.phtml', array('controller'=>$this->controller, 'module'=>$this->module, 'action'=>$this->slug, 'params'=>$pagerParams)) ?>
+</div>
+
+
+

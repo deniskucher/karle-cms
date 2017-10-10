@@ -1,0 +1,41 @@
+<script type="text/javascript">
+<!--
+$(document).ready(function() {
+	$('#sign-in_form').submitForm();
+});
+//-->
+</script>
+<div class="separate-page-header">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 col-md-6 col-sm-8 col-md-offset-3 col-sm-offset-2">
+				
+					<p><h1><?php echo Ct_Translate::_('sign_in'); ?></h1></p>
+
+					<form method="post" action="<?php echo $this->url(array('action' => 'sign-in', 'controller' => 'index'), null, false)?>" id="sign-in_form">
+						<input type="hidden" value="sign-in_form" name="f[id]" />
+						
+						<div class="form-group">
+			                <label class="form-control-label" for="fusername"><?php echo Ct_Translate::_('username'); ?></label>
+			                <input class="form-control" name="f[username]" required="" data-form-field="fusername" id="fusername" type="text">
+			                <div id="id_username" class="at-error-msg"></div>
+			            </div>
+						<div class="form-group">
+			                <label class="form-control-label" for="fpassword"><?php echo Ct_Translate::_('password'); ?></label>
+			                <input class="form-control" name="f[password]" required="" data-form-field="fpassword" id="fpassword" type="password">
+			                <div id="id_password" class="at-error-msg"></div>
+			            </div>
+						<div class="submit">
+							<button type="submit" class="btn btn-primary submitform">
+								<span class="btn-text"><?php echo Ct_Translate::_('sign_in'); ?></span>
+								<i class="btn-loader"></i>
+							</button>
+						</div>
+						
+					</form>
+				
+				
+			</div>	
+		</div>
+	</div>
+</div>

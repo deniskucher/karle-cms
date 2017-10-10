@@ -1,0 +1,48 @@
+<div class="random-horse-main-image" style="background-image: url('<?php if ($this->horse['filename']) : ?><?php echo $this->baseUrl('/uploads/photos/large/'.$this->horse['filename']);?><?php else: ?><?php echo $this->baseUrl('/img/default/no-preview-large.png');?><?php endif; ?>');">
+    <?php /*$seoText = Ct_Translate::_($this->horse['category']).' '.Ct_Translate::_('from').' '.$this->escape($this->horse['father']).' x '.$this->escape($this->horse['mothers_father']); ?>
+    <?php if ($this->horse['filename']) : ?>
+        <img src="<?php echo $this->baseUrl('/uploads/photos/large/'.$this->horse['filename']);?>" alt="<?php echo $seoText; ?>" title="<?php echo $seoText; ?>" style="float:left;" />
+    <?php else : ?>
+        <img src="<?php echo $this->baseUrl('/img/default/no-preview-large.png');?>" alt="<?php echo $seoText; ?>" title="<?php echo $seoText; ?>" style="float:left;" />
+    <?php endif; */ ?>
+    
+    <div id="random-image-name">
+        <?php $sexes = Admin_Model_HorseService::i()->getSexOptions(); ?>
+        <p><a href="<?php echo $this->url(array('action' => 'view', 'controller' => 'horse', 'module' => 'default', 'language'=>$this->language, 'id'=>$this->horse['id']),'default'); ?>" style="color: #fff; font-weight: bold;">
+            <?php echo $horseTitle = $this->horse['age'].'-'.Ct_Translate::_(($this->horse['sex']?'years_old':'years_old_mare')).' '.Ct_Translate::_($sexes[$this->horse['sex']]).' '.Ct_Translate::_('from').' '.$this->escape($this->horse['father']); ?>
+        </a></p>
+
+        <p><?php if ($this->language == 'de') : ?>
+            <?php echo $this->escape(Ct_View_Helper_Truncate::trunc($this->horse['successes'], 30)); ?>
+        <?php else: ?>
+            <?php echo $this->escape(Ct_View_Helper_Truncate::trunc($this->horse['successes_en'], 30)); ?>
+        <?php endif; ?></p>
+    </div>
+    <div style="position: absolute; bottom: 0px; right: 10px; z-index: 10;">
+        <?php $horseTitle = str_replace(array('/', ' '), array('-', '-'), $horseTitle); ?>
+        <?php if ($this->horse['filename']) : ?>
+            <a href="<?php echo $this->url(array('id' => $this->horse['id'], 'title' => $horseTitle, 'category'=>$this->horse['category']), 'horseml'); ?>#photos"><img src="<?php echo $this->baseUrl('/img/default/photos.png');?>" alt="photos" /></a>
+        <?php endif; ?>
+        <?php if ($this->horse['video_id']) : ?>
+            <a href="<?php echo $this->url(array('id' => $this->horse['id'], 'title' => $horseTitle, 'category'=>$this->horse['category']), 'horseml'); ?>#videos"><img src="<?php echo $this->baseUrl('/img/default/videos.png');?>" alt="videos" /></a>
+        <?php endif; ?>
+    </div>
+
+</div>
+<input type="hidden" id="horse_random_id" value="<?php echo $this->horse['id']; ?>" />
+<div class="al-clear"></div>
+<?php /*
+<div class="random-horse-info">
+    <p id="random_main_description">
+        <?php if ($this->language == 'de') : ?>
+            <?php echo $this->escape(Ct_View_Helper_Truncate::trunc($this->horse['successes'], 30)); ?>
+        <?php else: ?>
+            <?php echo $this->escape(Ct_View_Helper_Truncate::trunc($this->horse['successes_en'], 30)); ?>
+        <?php endif; ?>
+    </p>
+    
+    <p class="random-buttons"><input type="button" id="view_horse_details" value="View Details" /></p>
+     
+</div>
+<div class="al-clear"></div>
+*/ ?>

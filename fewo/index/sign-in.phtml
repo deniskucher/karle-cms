@@ -1,0 +1,31 @@
+<script type="text/javascript">
+<!--
+$(document).ready(function() {
+	$('#sign-in_form').submitForm();
+});
+//-->
+</script>
+<div class="sign-in-box">
+	<div class="sign-in-box-row">
+		<h1><?php echo Ct_Translate::_('sign_in'); ?></h1>
+	</div>
+	<form method="post" action="<?php echo $this->url(array('action' => 'sign-in', 'controller' => 'index'), null, false)?>" id="sign-in_form">
+	<input type="hidden" value="sign-in_form" name="f[id]" />
+		<div class="sign-in-box-row">
+			<label for="username" class="sign-in-box-label"><span class="required-asterisk">*</span> <?php echo Ct_Translate::_('username'); ?>:</label>
+			<input type="text" id="fusername" class="sign-in-box-input" value="" name="f[username]" />
+			<div class="at-error-msg" id="id_username"></div>
+		</div>
+		<div class="sign-in-box-row">
+			<label for="password" class="sign-in-box-label"><span class="required-asterisk">*</span> <?php echo Ct_Translate::_('password'); ?>:</label>
+			<input type="password" id="fpassword" class="sign-in-box-input" value="" name="f[password]" />
+			<div class="at-error-msg" id="id_password"></div>			
+		</div>
+		<div class="sign-in-box-row">
+			<input type="checkbox" id="remember_me" name="f[remember_me]" /> <label for="remember_me"><?php echo Ct_Translate::_('remember_me'); ?></label>
+		</div>
+		<div class="sign-in-box-row-buttons">
+			<input type="submit" value="<?php echo Ct_Translate::_('sign_in'); ?>" /> or <a href="<?php echo $this->url(array('action' => 'index', 'controller' => 'forgot-password', 'module' => 'default'),'default');?>"><?php echo Ct_Translate::_('receive_your_password'); ?></a>
+		</div>
+	</form>
+</div>

@@ -1,0 +1,91 @@
+<?php
+    if ($this->language == 'en') {
+        $subject = 'subject_en';
+        $content = 'content_en';
+    } else {
+        $subject = 'subject';
+        $content = 'content';
+    }
+
+$this->headScript()->prependFile($this->baseUrl('/js/uploadify/swfobject.js'))
+    ->appendFile($this->baseUrl('/js/flowplayer/flowplayer-3.2.4.min.js'));
+
+?>
+<h1><?php echo $this->escape($this->data[$subject]); ?> <span class="news-date"><?php echo date("m/d/y", strtotime($this->data['date'])); ?></span></h1>
+<p class="news-text">
+    <?php #echo nl2br($this->escape($this->data[$content])); ?>
+    <?php echo $this->data[$content]; ?>
+</p>
+<div id="photo_gallery">
+    <br/>
+    <div id="preview_container_div" style="clear: both;">
+        <ul class="images-list" id="preview_media_container">
+    <?php
+        foreach($this->photos as $k=>$v){
+    ?>
+        <li id="<?php echo str_replace(".","",$v['ni_image'])?>">
+            <a rel='gallery_group' href='/uploads/news/photos/<?php echo $v['ni_image']?>'>
+                <img width='150px' src='/uploads/news/thumbs/<?php echo $v['ni_image']?>' title=''/>
+            </a>
+        </li>
+    <?php
+        }
+    ?>    <?php
+        foreach($this->videos as $k=>$v){
+    ?>
+        <li id="<?php echo str_replace(".","",$v['nv_video'])?>">
+            <a rel='gallery_group2' class="video" href='/uploads/news/video/360p/<?php $m = explode(".",$v['nv_video']); echo $m[0].".flv";?>'>
+                <img width='150px' src='/uploads/news/video/thumbs/<?php $m = explode(".",$v['nv_video']); echo $m[0].".jpg";?>' title=''/>
+            </a>
+        </li>
+    <?php
+        }
+    ?>
+        </ul>
+    </div>
+    <div style="clear: both; padding-top: 10px;">
+        <ul class="images-list" id="preview_container_doc">
+    <?php
+        foreach($this->documents as $k=>$v){
+    ?>
+        <li><a target="_blank" href='/uploads/news/documents/<?php echo $v['nd_document']?>'><?php echo $v['nd_document']?></a></li>
+    <?php
+        }
+    ?>
+        </ul>
+    </div>
+</div>
+
+<input type="hidden" id="flowplayer_path" value="<?php echo $this->baseUrl('/js/flowplayer/flowplayer-3.2.5.swf'); ?>" />
+<script type="text/javascript">
+    	$("a[rel=gallery_group]").fancybox({
+    		'transitionIn'	:	'elastic',
+    		'transitionOut'	:	'elastic',
+    		'speedIn'		:	600,
+    		'speedOut'		:	200,
+    		'overlayShow'	:	true,
+    		'showNavArrows'	:	true,
+            'autoScale'     :   true
+    	});
+        $(document).ready(function(){
+          $("a.video").click(function() {
+           $.fancybox({
+            'padding' : 0,
+            'autoScale' : false,
+            'title' : this.title,
+            'overlayOpacity' : '.6',
+            'overlayColor' : '#333',
+            'transitionIn' : 'none',
+            'transitionOut' : 'none',
+            'showNavArrows' : false,
+            'centerOnScroll' : false,
+            'showCloseButton' : true,
+            'hideOnOverlayClick': false,
+            'content': '<a id="player" style="display:block;width:780px;height:495px;margin:auto;" ><object width="100%" height="100%" type="application/x-shockwave-flash" data="/js/flowplayer/flowplayer-3.2.5.swf?0.5085859816437583" name="player_api" id="player_api"><param value="true" name="allowfullscreen"><param value="always" name="allowscriptaccess"><param value="high" name="quality"><param value="true" name="cachebusting"><param value="#000000" name="bgcolor"><param value="opaque" name="wmode"><param  id="player_flw" value="config={&quot;clip&quot;:{&quot;scaling&quot;:&quot;fit&quot;,&quot;url&quot;:&quot;/uploads/videos/sd/video_19_129983414056815875.flv&quot;},&quot;playerId&quot;:&quot;player&quot;,&quot;playlist&quot;:[{&quot;scaling&quot;:&quot;fit&quot;,&quot;url&quot;:&quot;'+(this.href)+'&quot;}]}" name="flashvars"></object></a><span id="fancybox-title-over"><a href="javascript:void(0);" onclick="changeVideoQuality(\''+(this.href)+'\',\'360\')">360</a> <a href="javascript:void(0);" onclick="changeVideoQuality(\''+(this.href)+'\',\'original\')">Original</a></span>'
+            //'content': '<a id="player" style="display:block;width:780px;height:495px;margin:auto;" href="<?php echo $_SERVER['SERVER_NAME']?>/js/jwplayer.swf?file='+(this.href)+'"><object width="100%" height="100%" type="application/x-shockwave-flash" data="/js/flowplayer/flowplayer-3.2.5.swf?0.5085859816437583" name="player_api" id="player_api"><param value="true" name="allowfullscreen"><param value="always" name="allowscriptaccess"><param value="high" name="quality"><param value="true" name="cachebusting"><param value="#000000" name="bgcolor"><param value="opaque" name="wmode"><param  id="player_flw" value="config={&quot;clip&quot;:{&quot;scaling&quot;:&quot;fit&quot;,&quot;url&quot;:&quot;/uploads/videos/sd/video_19_129983414056815875.flv&quot;},&quot;playerId&quot;:&quot;player&quot;,&quot;playlist&quot;:[{&quot;scaling&quot;:&quot;fit&quot;,&quot;url&quot;:&quot;'+(this.href)+'&quot;}]}" name="flashvars"></object></a><span id="fancybox-title-over"><a href="javascript:void(0);" onclick="changeVideoQuality(\''+(this.href)+'\',\'360\')">360</a> <a href="javascript:void(0);" onclick="changeVideoQuality(\''+(this.href)+'\',\'original\')">Original</a></span>'
+            //'content': '<embed id="video_player_jwp" height="480" width="640" src="<?php echo $_SERVER['SERVER_NAME']?>/js/jwplayer.swf?file='+(this.href)+'&amp;autostart=true&amp;fs=1" type="application/x-shockwave-flash" wmode="opaque" allowfullscreen="true" allowscriptaccess="always"></embed><span id="fancybox-title-over"><a href="javascript:void(0);" onclick="changeVideoQuality(\''+(this.href)+'\',\'360\')">360</a> <a href="javascript:void(0);" onclick="changeVideoQuality(\''+(this.href)+'\',\'original\')">Original</a></span>'
+           }); // fancybox
+           return false;
+          }); // click
+         }); // ready
+</script>

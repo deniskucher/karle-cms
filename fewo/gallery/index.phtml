@@ -1,0 +1,20 @@
+<?php
+    $this->headScript()->appendFile($this->baseUrl('/js/jquery.lightbox-0.5.min.js'));
+    $this->headLink()->prependStylesheet($this->baseUrl('/css/jquery/lightbox/jquery.lightbox-0.5.css'));
+?>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('.gallery-images-list a').lightBox();
+});
+</script>
+
+<h2><?php echo Ct_Translate::_('gallery'); ?></h2>
+<?php echo $this->intContent; ?>
+<ul class="gallery-images-list">
+    <?php foreach ($this->images as $image) : ?>
+    <li>
+        <a title="<?php echo $this->escape($image['title_'.$this->language]); ?>" href="<?php echo $this->baseUrl('/uploads/gallery/large/'.$image['filename']); ?>"><img src="<?php echo $this->baseUrl('/uploads/gallery/thumbs/'.$image['filename']); ?>"  alt="<?php echo $this->escape($image['title_'.$this->language]); ?>" title="<?php echo $this->escape($image['title_'.$this->language]); ?>" /></a>
+        <h4><?php echo $this->escape($image['title_'.$this->language]); ?></h4>
+    </li>
+    <?php endforeach; ?>
+</ul>

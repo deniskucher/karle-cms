@@ -1,0 +1,9 @@
+<?php if (count($this->list)) :?>
+<div class="at-nl">
+	<div class="<?php if($this->error) : ?>at-error-box<?php else : ?>at-warning-box<?php endif;?>">
+		<?php foreach($this->list as $msg) : ?>
+			<?= $msg ?><br/>
+		<?php endforeach;?>
+	</div>
+</div>
+<?php endif; ?>

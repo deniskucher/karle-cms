@@ -1,0 +1,213 @@
+<?php echo $this->doctype(); ?>
+<html class="desktop mbr-site-loaded">
+
+    <head>
+        <!-- Site made with Mobirise Website Builder v3.11.1, https://mobirise.com -->
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <?php
+            if (isset($this->metaDescription) && $this->metaDescription) {
+                $this->headMeta()->appendName('description', $this->metaDescription);
+            }
+            echo $this->headMeta();
+        ?>
+        <?php echo $this->headStyle(); ?>
+        <?php echo $this->headLink(); ?>
+        <?php
+            $title = Default_Model_UserService::i()->getDomainSetting($this->domainId, 'title_'.$this->language);
+            if ($this->title) {
+                $title .= ' - '.$this->title;
+            }
+            echo $this->headTitle($title);
+        ?>
+        <?php
+            $link = $this->headLink()->prependStylesheet($this->baseUrl('/css/jquery/ui-lightness/jquery-ui-1.8.4.custom.css'))
+                        ->headLink(
+                            array(
+                                'rel' => 'SHORTCUT ICON',
+                                'type' => 'image/x-icon',
+                                'href' => $this->baseUrl('/img/'.$this->theme.'/favico.ico')
+                            ),
+                            'PREPEND');
+                        
+            if (isset($this->theme) && ($this->theme)) {
+                $link->appendStylesheet('https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic&amp;subset=latin')
+                    ->appendStylesheet($this->baseUrl('/plugins/bootstrap_fewo/css/bootstrap.min.css'))
+                    ->appendStylesheet($this->baseUrl('/plugins/dropdown/css/style.css'))
+                    ->appendStylesheet($this->baseUrl('/css/'.$this->theme.'/style.css'))
+                    ->appendStylesheet($this->baseUrl('/plugins/mobirise/css/mbr-additional.css'));
+                  
+            } else {
+                $link->prependStylesheet($this->baseUrl('/css/default/main.css'));
+                
+            }
+
+            echo $link;
+        ?>
+    
+        <?php
+            $script = $this->headScript()->prependFile($this->baseUrl('/js/jquery/jquery-1.12.4.min.js'))
+                                      ->appendFile($this->baseUrl('/js/jquery/ui/jquery-ui-1.8.4.custom.min.js'))
+                                      ->appendFile($this->baseUrl('/js/ct.form.js'))
+                                      ->appendFile($this->baseUrl('/js/jquery/jquery.form.js'))
+                                      ->appendFile($this->baseUrl('/js/jquery/jquery-cookie.js'))
+                                      ->appendFile($this->baseUrl('/js/default.js'))
+                                      ->appendFile($this->baseUrl('/js/admin-main.js'))
+                                      ->appendFile($this->baseUrl('/js/jarallax/jarallax.js'));
+                                      
+
+            // if (($this->domainId>0) && (($this->showTopbar) || (($this->controller == 'index') && ($this->action=='index') ) )) {
+            //     $script->appendFile($this->baseUrl('/js/random.js'));
+            // }
+
+            echo $script;
+
+        ?>
+
+        <?php if (($this->domainId>0) && ($googleAnalytics = Default_Model_UserService::i()->getDomainSetting($this->domainId, 'google_analytics'))) : ?>
+
+            <script type="text/javascript">
+
+              var _gaq = _gaq || [];
+              _gaq.push(['_setAccount', '<?php echo $this->escape($googleAnalytics); ?>']);
+              _gaq.push(['_gat._anonymizeIp']);
+              _gaq.push(['_trackPageview']);
+
+              (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+              })();
+
+            </script>
+
+        <?php endif; ?>
+        
+    </head>
+<body>
+    <section id="ext_menu-0">
+
+        <nav class="navbar navbar-dropdown navbar-fixed-top" id="header">
+            <div class="container">
+
+                <div class="mbr-table">
+                    <div class="mbr-table-cell">
+
+                        <div class="navbar-brand">
+                            <a href="<?php echo $this->url(array('action'=>'index', 'controller'=>'index', 'module' => 'default'), 'default')?>" class="navbar-logo">
+                                <img src="/uploads/logos/image_49_148638395121732300.png" alt="<?php echo $this->settings['title_'.$this->language] ?>" title="<?php echo $this->settings['title_'.$this->language] ?>">
+                            </a>
+                            <a class="navbar-caption" href="<?php echo $this->url(array('action'=>'index', 'controller'=>'index', 'module' => 'default'), 'default')?>">Ferienwohnung Karle</a>
+                            
+                        </div>
+
+                    </div>
+                    <div class="mbr-table-cell">
+
+                        <button class="navbar-toggler pull-xs-right hidden-md-up" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar">
+                            <div class="hamburger-icon"></div>
+                        </button>
+
+                        <ul class="nav-dropdown collapse pull-xs-right nav navbar-nav navbar-toggleable-sm" id="exCollapsingNavbar">
+                            <li class="nav-item">
+                                <a class="nav-link link" href="<?php echo $this->url(array('action'=>'index', 'controller'=>'index', 'module' => 'default'), 'default')?>#header3-c"><?php echo Ct_Translate::_('flat'); ?></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link link" href="<?php echo $this->url(array('action'=>'index', 'controller'=>'index', 'module' => 'default'), 'default')?>#msg-box8-g"><?php echo Ct_Translate::_('location'); ?></a>
+                            </li>
+                            <li class="nav-item nav-btn">
+                                <a class="nav-link btn btn-primary" href="<?php echo $this->url(array('action'=>'index', 'controller'=>'index', 'module' => 'default'), 'default')?>#form1-i"><?php echo Ct_Translate::_('contact'); ?></a>
+                            </li>
+                            <li class="nav-item nav-btn btn-group" id="lang">
+                                <?php foreach ($this->headerMenu as $menuItem) : ?>
+                                    <a class="nav-link btn btn-primary <?php echo isset($menuItem['class'])?$menuItem['class']:'' ?> 
+                                    <?php if($menuItem['selected']): ?>selected<?php endif ?>" href="<?php echo $menuItem['href'] ?>" title="<?php echo $this->escape($menuItem['title']) ?>" <?php if(isset($menuItem['target'])): ?>target="<?php echo $menuItem['target'] ?>"<?php endif ?>><?php echo empty($menuItem['label']) ? '&nbsp' : $this->escape($menuItem['label']) ?></a>
+                                <?php endforeach ?>
+                                
+                            </li>
+
+                        </ul>
+                        <button class="navbar-toggler navbar-close" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar" hidden="">
+                            <div class="close-icon"></div>
+                        </button>
+
+                    </div>
+                </div>
+
+            </div>
+        </nav>
+
+    </section>
+    <section class="content">
+        <div><?php echo $this->layout()->content ?></div> 
+    </section>
+    
+
+    <section class="mbr-section mbr-section-md-padding mbr-footer footer2" id="contacts2-4" style="background-color: rgb(46, 46, 46); padding-top: 90px; padding-bottom: 90px;">
+        
+        <div class="container">
+            <div class="row">
+                <div class="mbr-footer-content col-xs-12 col-md-3">
+                    <strong><?php echo Ct_Translate::_('address'); ?></strong>
+                    <div class="article-footer">
+                        <p>Blauenstrasse 41</p>
+                        <p>79589 Binzen</p>
+                    </div>
+                    
+                    <strong><?php echo Ct_Translate::_('contact'); ?></strong>
+                    <div class="article-footer">
+                        <p><?php echo Ct_Translate::_('email'); ?>: info@ferienwohnung-karle.de</p>
+                        <p><?php echo Ct_Translate::_('phone'); ?>: +49 (0) 7621 164733</p>
+                    </div>
+                    
+                </div>
+                <div class="mbr-footer-content col-xs-12 col-md-3">
+                    <strong>Links</strong>
+                    <ul>
+                        <li><a href="<?php echo $this->url(array('action'=>'index', 'controller'=>'index', 'module' => 'default'), 'default')?>#header3-c"><?php echo Ct_Translate::_('flat'); ?></a></li>
+                        <li><a href="<?php echo $this->url(array('action'=>'index', 'controller'=>'index', 'module' => 'default'), 'default')?>#msg-box8-g"><?php echo Ct_Translate::_('location'); ?></a></li>
+                        <li><a href="<?php echo $this->url(array('action'=>'index', 'controller'=>'index', 'module' => 'default'), 'default')?>#form1-i"><?php echo Ct_Translate::_('direction'); ?> &amp; <?php echo Ct_Translate::_('contact'); ?> </a></li>
+                    </ul>
+                </div>
+                <div class="col-xs-12 col-md-6">
+                    <div class="mbr-map">
+                    	<!-- <iframe style="border:0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyA0Dx_boXQiwvdz8sJHoYeZNVTdoWONYkU&amp;q=place_id:ChIJ-bPOnYq6kUcRJyEsNfUEw4M" allowfullscreen="" frameborder="0"></iframe> -->
+                    	<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d344139.1391856616!2d7.6775326!3d47.6341584!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4791ba8a9dc92169%3A0xa820fad14e7864ed!2zQiZCICsgRmVyaWVud29obnVuZyBGYW1pbGllIEthcmxlINCe0YLQtdC70Yw!5e0!3m2!1sru!2sde!4v1490183534467" width="400" height="300" frameborder="0" style="border:0" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="mbr-small-footer mbr-section mbr-section-nopadding" id="footer1-5" style="background-color: rgb(50, 50, 50); padding-top: 1.75rem; padding-bottom: 1.75rem;">
+        
+        <div class="container">
+            <p class="text-xs-center">Copyright (c) 2016 Ferienwohnung-Karle.
+            <a href="<?php echo $this->footerMenu[0]['url'] ?>"><?php echo $this->footerMenu[0]['title'] ?></a>
+            </p>
+        </div>
+    </footer>
+            
+    <script type="text/javascript">
+        /* init Jarallax */
+        jarallax(document.querySelectorAll('.jarallax'), {});
+        
+    </script>
+
+    <!--<script src="<?php echo $this->baseUrl('/js/jquery/jquery-1.12.4.min.js') ?>"></script>-->
+    <script src="<?php echo $this->baseUrl('/plugins/bootstrap_fewo/js/bootstrap.min.js') ?>"></script>
+    <script src="<?php echo $this->baseUrl('/plugins/dropdown/js/script.min.js') ?>"></script>
+    <script src="<?php echo $this->baseUrl('/plugins/jquery.touchSwipe/jquery.touchSwipe.min.js') ?>"></script>
+    <script src="<?php echo $this->baseUrl('/js/fewo/script.js') ?>"></script>
+    <script src="<?php echo $this->baseUrl('/js/fewo/fewo.js') ?>"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#contact_form').submitForm({}, function() {});
+        });
+        
+    </script>
+    <div id="scrollToTop" class="scrollToTop mbr-arrow-up" style="display: none;"><a style="text-align: center;"><i class="mbr-arrow-up-icon"></i></a></div>
+</body>
+</html>

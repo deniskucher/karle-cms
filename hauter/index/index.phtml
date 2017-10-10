@@ -1,0 +1,470 @@
+<?php
+        $levels = Admin_Model_HorseService::i()->getLevelOptions();
+        $prices = Admin_Model_HorseService::i()->getPriceOptions($this->domainId);
+        $colors = Admin_Model_HorseService::i()->getColorOptions();
+        $sexes = Admin_Model_HorseService::i()->getSexOptions();
+        function composeURL($params, $arrayName) {
+            $tempParams = array();
+            if (is_array($params))
+            {
+                foreach ($params as $k=>$v) {
+                    $tempParams[] = $arrayName.'['.$k.']='.$v;
+                }
+            }
+            $url = implode('&', $tempParams);
+            return $url;
+        }
+        // $pagerParams = composeURL($this->filter, 'filter');
+        $categories = Admin_Model_HorseService::i()->getCategoryOptions();
+        $singCatNames = Admin_Model_HorseService::i()->getSingularCategoryNames();
+        $sexes = Admin_Model_HorseService::i()->getSexOptions();
+        $colors = Admin_Model_HorseService::i()->getColorOptions();
+       
+        $horses = Admin_Model_HorseService::i()->listHorses(null, $this->domainId,null,null,$this->videoEngine)->query()->fetchAll();
+        $pages = Admin_Model_PageService::i()->listPages(null, $this->domainId,null,null)->query()->fetchAll();
+        // var_dump($horses[0]['video']); exit();
+        
+    ?>
+<div class="jarallax mbr-section-full mbr-section mbr-section-hero" id="header-video">
+    <!-- <div class="video1">
+        <video height="100%" width="100%" autoplay="autoplay" loop="loop" controls="controls" poster="<?php echo $this->baseUrl('/img/'.$this->theme.'/headervideo_poster.png');?>">
+            <source src="<?php echo $this->baseUrl('/img/'.$this->theme.'/video/header_video.webm');?>" />
+            <source src="<?php echo $this->baseUrl('/img/'.$this->theme.'/video/header_video.mp4');?>" />
+            <source src="<?php echo $this->baseUrl('/img/'.$this->theme.'/video/header_video.ogv');?>" />
+            
+        </video>
+    </div> -->
+    <pre class="code_sample" style="display:none">
+        $('.slider1').mobilyslider();
+    </pre>
+    <div class="slider slider1">
+        <div class="sliderContent">
+            <div class="item slide1"></div>
+            <div class="item slide2"></div>
+            <div class="item slide3"></div>
+            <div class="item slide4"></div>
+            <div class="item slide5"></div>
+            
+        </div>
+    </div>
+    
+    <div class="container-header-main" style="display:none">
+        <div class="container">
+            <div class="row">
+                <div class="mbr-sectiontext-xs-center">
+                    <h3 class="mbr-section-title display-2">INTRO </h3>
+                    <p class="footer-main-subtext">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce at quam pulvinar, maximus dolor sed, pharetra metus. Vivamus non ligula dapibus, efficitur nunc quis, malesuada ipsum.</p>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    <div class="menu-table">
+            <div class="row">
+                <div class="mbr-section col-md-12 text-xs-center">
+                    <div class="mbr-section-btn">
+                        <a class="btn btn-lg btn-dark-outline" href="<?php echo $this->url(array('action'=>'index', 'controller'=>'index', 'module' => 'default'), 'default')?>#aboutme">
+                            <?php echo strtoupper($pages[3]['title_'.$this->language]); ?>
+                        </a> 
+                        <a class="btn btn-lg btn-dark-outline" href="<?php echo $this->url(array('action'=>'index', 'controller'=>'index', 'module' => 'default'), 'default')?>#trainingandeducation">
+                            <?php echo strtoupper($pages[0]['title_'.$this->language]); ?>
+                        </a> 
+                        
+                        <div class="btn-group dropup btn-group-menu">
+                            <a type="button" class="btn btn-lg btn-dark-outline btn-group-left" href="<?php echo $this->url(array('action'=>'index', 'controller'=>'index', 'module' => 'default'), 'default')?>#horsesforsale"><?php echo strtoupper($pages[9]['title_'.$this->language]); ?>
+                            </a>
+                            <a type="button" class="btn btn-lg btn-dark-outline btn-group-right dropdown-toggle horsesforsale-dropdown" id="horsesforsale-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="caret"></span>
+                            </a>
+                            <?php if (isset($this->horsesMenu)) : ?>
+                            <ul class="dropdown-menu2" role="menu" aria-labelledby="horsesforsale-dropdown">
+                                <?php foreach ($this->horsesMenu as $submenuItem) : ?>
+                                <li>
+                                    <a href="<?php echo $submenuItem['url'] ?>"><?php echo $this->escape($submenuItem['title']) ?></a>
+                                </li>
+                                <?php endforeach; ?>
+                                <?php if (isset($this->successfullHoresesSubMenu)) : ?>
+                                    <li>
+                                        <a href="<?php echo $this->successfullHoresesSubMenu['url'] ?>"><?php echo $this->successfullHoresesSubMenu['title'].$this->successfullHoresesSubMenu['count']; ?>
+                                        </a>
+                                    </li>
+                                <?php endif ?>
+                            </ul>
+                            <?php endif ?>
+                        </div>
+                        <a class="btn btn-lg btn-dark-outline" href="<?php echo $this->url(array('action'=>'index', 'controller'=>'index', 'module' => 'default'), 'default')?>#gallery">
+                            <?php echo strtoupper($pages[6]['title_'.$this->language]); ?>
+                        </a>
+                        <a class="btn btn-lg btn-dark-outline" href="<?php echo $this->url(array('action'=>'index', 'controller'=>'index', 'module' => 'default'), 'default')?>#location">
+                            <?php echo strtoupper($pages[2]['title_'.$this->language]); ?>
+                        </a> 
+
+                    </div>
+                </div>
+
+            </div>
+    </div>
+</div>
+
+
+    <!-- <div class="menu-table"> -->
+        <!-- <div class="row menu-1">
+            <div class="col-md-3 col-sm-6 header-footer-menu about-me">
+                <a class="menu1-title" href="<?php echo $this->url(array('action'=>'index', 'controller'=>'index', 'module' => 'default'), 'default')?>#aboutme">
+                    <div class="opacity"><p><?php echo strtoupper(Ct_Translate::_('about-me')); ?></p></div>
+                </a>
+            </div>
+            <div class="col-md-3 col-sm-6 header-footer-menu training-education">
+                <a class="menu1-title" href="<?php echo $this->url(array('action'=>'index', 'controller'=>'index', 'module' => 'default'), 'default')?>#trainingandeducation">
+                    <div class="opacity"><p><?php echo strtoupper(Ct_Translate::_('training&education')); ?></p></div>
+                </a>   
+                
+            </div>
+            <div class="col-md-3  col-sm-6 header-footer-menu horses-sale">
+                <a class="menu1-title" href="<?php echo $this->url(array('action'=>'index', 'controller'=>'index', 'module' => 'default'), 'default')?>#horsesforsale">
+                    <div class="opacity"><p><?php echo strtoupper(Ct_Translate::_('horses-for-sale')); ?></p></div>
+                </a>        
+            </div>
+            <div class="col-md-3  col-sm-6 header-footer-menu contact">
+                <a class="menu1-title" href="<?php echo $this->url(array('action'=>'index', 'controller'=>'index', 'module' => 'default'), 'default')?>#location">
+                    <div class="opacity"><p><?php echo strtoupper(Ct_Translate::_('contact')); ?></p></div>
+                </a>   
+            </div>
+        </div> -->
+    <!-- </div> -->
+</section>
+
+<section class="mbr-section mbr-section__container article" id="aboutme">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                
+                <h3 class="mbr-section-title display-2"><?php echo strtoupper($pages[3]['title_'.$this->language]); ?></h3>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="mbr-section article mbr-section__container">
+    <div class="container">
+      
+        <?php foreach ($pages as $page) :?>
+            <?php if ($page['id'] == 632) : ?>
+                <?php $aboutme = $page['content_'.$this->language];?>
+            <?php endif ?>
+        <?php endforeach ?>   
+        <?php echo $aboutme; ?>   
+        
+        <!-- <a href="<?php echo $this->mainMenu[3]['url'] ?>">+ <?php echo Ct_Translate::_('more_info'); ?></a> -->
+        
+    </div>
+
+<section class="mbr-section mbr-section__container" id="video-aboutme" >
+    <div class="video1">
+        <video height="100%" width="100%" controls="controls" loop poster="<?php echo $this->baseUrl('/img/'.$this->theme.'/headervideo_poster.png');?>">
+            <source src="<?php echo $this->baseUrl('/img/'.$this->theme.'/video/bottom_video.ogv');?>" />
+            <source src="<?php echo $this->baseUrl('/img/'.$this->theme.'/video/bottom_video.webm');?>" />
+        </video>   
+    </div>
+</section>
+</div>
+<div class="section-divider"></div>
+<section class="mbr-section mbr-section__container article" id="trainingandeducation">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <!-- <h3 class="mbr-section-title display-2"><?php echo strtoupper(Ct_Translate::_('training&education')); ?></h3> -->
+                <h3 class="mbr-section-title display-2"><?php echo strtoupper($pages[0]['title_'.$this->language]); ?></h3>
+                
+            </div>
+        </div>
+    </div>
+</section>
+<div class="mbr-section article mbr-section__container">
+    <div class="container training-and-education">
+    
+        <?php foreach ($pages as $page) :?>
+            <?php if ($page['id'] == 637) : ?>
+                <?php $training = $page['content_'.$this->language];?>
+            <?php endif ?>
+        <?php endforeach ?>   
+        <?php echo $training; ?>  
+
+        <div class="row">
+            <div class="col-xs-12">
+            	<?php foreach ($this->mainMenu as $menu) :?>
+		            <?php if ($menu['id'] == 788) : ?>
+		                <?php $menuUrl = $menu['url'];?>
+		            <?php endif ?>
+		        <?php endforeach ?>   
+		        <!-- <a href="<?php echo $menuUrl ?>">+ <?php echo Ct_Translate::_('more_info'); ?></a> -->
+                <!-- <a href="<?php echo '/'.$this->language.$this->pageUrlByIntName['successful_horses'] ?>"><?php echo '+ '.Ct_Translate::_('more').' '.strtolower(Ct_Translate::_('training&education')).'...' ?></a> -->
+            </div>
+        </div> 
+    </div>
+   
+</div>
+
+<div class="section-divider"></div>
+<section class="mbr-section mbr-section__container article" id="horsesforsale">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <h3 class="mbr-section-title display-2"><?php echo strtoupper($pages[9]['title_'.$this->language]); ?></h3>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="mbr-section article mbr-section__container">
+    
+    <div class="container horses-for-sale">
+        <div class="row">
+            <div class="col-xs-12">
+                <?php echo $pages[9]['content_'.$this->language]; ?>
+            </div>
+        </div>
+        <?php $cnt1 = 0; ?>
+        <?php foreach ($horses as $key => $horse) : ?>
+            <?php if ($horse['category_id'] != 5  and  $horse['category_id'] != 6) : ?>
+                <?php $cnt1++; ?>
+                <?php if($cnt1 >3 ) break; ?>
+                <div class="row">
+                    <div class="col-md-3 col-sm-6 col-xs-12" style="text-align: center;">
+                        <a class="img card-img" href="<?php echo Ct_View_Helper_Horses::horsePageUrl($horse) ?>" style="background: url('<?php echo Ct_View_Helper_Horses::coverMediumImageUrl($horse) ?>') no-repeat center center; background-size: cover;" title="<?php echo Ct_View_Helper_Horses::seoText($horse) ?>"></a>
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-xs-12 hfs-article">
+                        <p class="title"><a href="<?php echo Ct_View_Helper_Horses::horsePageUrl($horse) ?>"><?php echo mb_strtoupper($this->escape($horse['name']), 'utf8') ?></a></p>
+                        
+                        <p><strong><?php echo Ct_Translate::_('level') ?>:</strong> <?php echo $this->escape($levels[$horse['level']]) ?></p>
+                        <p><strong><?php echo Ct_Translate::_('age') ?>:</strong> <?php echo (date('Y') - $this->escape($horse['age'])) ?></p>
+                        <? /*<p><strong><?php echo Ct_Translate::_('color') ?>:</strong> <?php echo $this->escape($colors[$horse['color']]) ?></p>*/ ?>
+                        <p><strong><?php echo Ct_Translate::_('height') ?>:</strong> <?php echo $this->escape(($this->language == 'en') ? (number_format($horse['height']*0.0984, 2).' '.Ct_Translate::_('hands')) : ($horse['height'].Ct_Translate::_('cm'))) ?></p>
+                        <p><strong><?php echo Ct_Translate::_('father'); ?>:</strong> <?php echo $this->escape($horse['father']) ?></p>
+                        <p><strong><?php echo Ct_Translate::_('mothers_father'); ?>:</strong> <?php echo $this->escape($horse['mothers_father']) ?></p>
+                        
+                        <p class="more"><a href="<?php echo Ct_View_Helper_Horses::horsePageUrl($horse) ?>">+ <?php echo Ct_Translate::_('more_info'); ?></a></p>
+                    </div>
+                    <div class="col-md-6 col-sm-12 col-xs-12 hfs-article">
+                        <?php if($horse['video']): ?>
+                            <a class="icon icon-video" style="float: right;" href="<?php echo Ct_View_Helper_Horses::horsePageUrl($horse) ?>#videos" title="<?php echo Ct_Translate::_('videos') ?>"></a>
+                        <?php endif ?>
+                        <?php if($horse['filename']): ?>
+                            <a class="icon icon-photo" style="float: right;" href="<?php echo Ct_View_Helper_Horses::horsePageUrl($horse) ?>#photos" title="<?php echo Ct_Translate::_('photos') ?>"></a>
+                        <?php endif ?>
+                        <?php if ($horse['category_id'] != 5  and  $horse['category_id'] != 6) : ?>
+                            <?php $successes = $this->language == 'en' ? $horse['successes_en'] : $horse['successes'] ?>
+                            <p style="text-align: justify"><?php echo Ct_View_Helper_Truncate::trunc($successes, 100) ?></p>
+                        <?php elseif ($horse['category_id'] == 6) : ?>
+                            <?php $description = $this->language == 'en' ? $horse['description_en'] : $horse['description'] ?>
+                            <p style="text-align: justify"><?php echo Ct_View_Helper_Truncate::trunc($description, 100) ?></p>
+                        <?php endif ?>
+                    </div>
+                </div>
+            <?php endif ?>
+        <?php endforeach ?>
+        
+        <div class="row">
+            <div class="col-xs-12 show-more">
+                <a class="btn btn-lg btn-dark-outline" href="<?php echo '/'.$this->language.$this->pageUrlByIntName['horses'] ?>">
+                    <?php echo Ct_Translate::_('show-more-horses')?>
+                </a>
+            </div>
+            
+        </div>
+    </div>   
+    
+</div>
+
+<div class="section-divider"></div>
+
+<section class="mbr-section mbr-section__container article" id="successful-horses">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <h3 class="mbr-section-title display-2"><?php echo strtoupper($pages[8]['title_'.$this->language]); ?></h3>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="mbr-section article mbr-section__container">
+    <div class="container horses-for-sale">
+        <div class="row">
+            <div class="col-xs-12">
+                <?php echo $pages[8]['content_'.$this->language]; ?>
+            </div>
+        </div>
+        <?php $cnt = 0; ?>
+        <?php foreach ($horses as $skey => $shorse) : ?>
+            <?php if ($shorse['category_id'] == 6) : ?>
+                <?php $cnt++; ?>
+                <?php if($cnt >3 ) break; ?>
+                <div class="row">
+                    <div class="col-md-3 col-sm-6 col-xs-12" style="text-align: center;">
+                        <a class="img card-img" href="<?php echo Ct_View_Helper_Horses::horsePageUrl($shorse) ?>" style="background: url('<?php echo Ct_View_Helper_Horses::coverMediumImageUrl($shorse) ?>') no-repeat center center; background-size: cover;" title="<?php echo Ct_View_Helper_Horses::seoText($shorse) ?>"></a>
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-xs-12 hfs-article">
+                        <p class="title"><a href="<?php echo Ct_View_Helper_Horses::horsePageUrl($shorse) ?>"><?php echo mb_strtoupper($this->escape($shorse['name']), 'utf8') ?></a></p>
+                        
+                        <p><strong><?php echo Ct_Translate::_('level') ?>:</strong> <?php echo $this->escape($levels[$shorse['level']]) ?></p>
+                        <p><strong><?php echo Ct_Translate::_('age') ?>:</strong> <?php echo (date('Y') - $this->escape($shorse['age'])) ?></p>
+                        <? /*<p><strong><?php echo Ct_Translate::_('color') ?>:</strong> <?php echo $this->escape($colors[$horse['color']]) ?></p>*/ ?>
+                        <p><strong><?php echo Ct_Translate::_('height') ?>:</strong> <?php echo $this->escape(($this->language == 'en') ? (number_format($shorse['height']*0.0984, 2).' '.Ct_Translate::_('hands')) : ($shorse['height'].Ct_Translate::_('cm'))) ?></p>
+                        <p><strong><?php echo Ct_Translate::_('father'); ?>:</strong> <?php echo $this->escape($shorse['father']) ?></p>
+                        <p><strong><?php echo Ct_Translate::_('mothers_father'); ?>:</strong> <?php echo $this->escape($shorse['mothers_father']) ?></p>
+                        
+                        <p class="more"><a href="<?php echo Ct_View_Helper_Horses::horsePageUrl($shorse) ?>">+ <?php echo Ct_Translate::_('more_info'); ?></a></p>
+                    </div>
+                    <div class="col-md-6 col-sm-12 col-xs-12 hfs-article">
+                        <?php if($shorse['video']): ?>
+                            <a class="icon icon-video" style="float: right;" href="<?php echo Ct_View_Helper_Horses::horsePageUrl($shorse) ?>#videos" title="<?php echo Ct_Translate::_('videos') ?>"></a>
+                        <?php endif ?>
+                        <?php if($shorse['filename']): ?>
+                            <a class="icon icon-photo" style="float: right;" href="<?php echo Ct_View_Helper_Horses::horsePageUrl($shorse) ?>#photos" title="<?php echo Ct_Translate::_('photos') ?>"></a>
+                        <?php endif ?>
+                        <?php if ($shorse['category_id'] != 5  and  $shorse['category_id'] != 6) : ?>
+                            <?php $successes = $this->language == 'en' ? $shorse['successes_en'] : $shorse['successes'] ?>
+                            <p style="text-align: justify"><?php echo Ct_View_Helper_Truncate::trunc($successes, 100) ?></p>
+                        <?php elseif ($shorse['category_id'] == 6) : ?>
+                            <?php $description = $this->language == 'en' ? $shorse['description_en'] : $shorse['description'] ?>
+                            <p style="text-align: justify"><?php echo Ct_View_Helper_Truncate::trunc($description, 100) ?></p>
+                        <?php endif ?>
+                    </div>
+                </div>
+            <?php endif ?>
+        <?php endforeach ?>
+        
+        <div class="row">
+            <div class="col-xs-12 show-more">
+                <a class="btn btn-lg btn-dark-outline" href="<?php echo '/'.$this->language.$this->pageUrlByIntName['successful_horses'] ?>">
+                    <?php echo Ct_Translate::_('show-more-horses')?>
+                </a>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<div class="section-divider"></div>
+
+<section class="mbr-section mbr-section__container article" id="gallery">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <h3 class="mbr-section-title display-2"><?php echo strtoupper($pages[6]['title_'.$this->language]); ?></h3>
+                
+            </div>
+        </div>
+    </div>
+</section>
+<section class="mbr-gallery mbr-slider-carousel" id="gallery1-k" data-rv-view="220"> 
+    <div class="container">
+        <div class="mbr-gallery-row">
+            <div class="mbr-gallery-layout-default"><?php for ($i = 0, $c = count($this->images); $i < $c; ++$i) : ?><?php $image = $this->images[$i] ?><?php $title = $image['title_'.$this->language] ?><div class="mbr-gallery-item mbr-gallery-item--p1" data-video-url="false" data-tags="Awesome">
+                        <div href="#lb-gallery1-k" data-slide-to="<?php echo $i ?>" data-toggle="modal">
+                            <img src="<?php echo Ct_View_Helper_Gallery::imageThumbUrl($image) ?>" <?php if(!empty($title)): ?>alt="<?php echo $this->escape($title) ?>"<?php endif ?>/>
+                            <span class="icon-focus"></span>
+                            <?php if(!empty($title)): ?><span class="mbr-gallery-title mbr-fonts-style display-7"><?php echo $this->escape($title) ?></span><?php endif ?>
+                        </div></div><?php endfor ?><div class="clearfix"></div>
+            </div>
+        </div>
+
+        <!-- Lightbox -->
+        <div data-app-prevent-settings="" class="mbr-slider modal fade carousel slide" tabindex="-1" data-keyboard="true" data-interval="false" id="lb-gallery1-k">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="carousel-inner">
+                            <?php for ($j = 0, $cnt = count($this->images); $j < $cnt; ++$j) : ?>
+                                <?php $image = $this->images[$j] ?>
+                                <?php $title = $image['title_'.$this->language] ?>
+                                <div class="carousel-item <?php if($j == 0): ?><?php echo "active" ?><?php endif ?>">
+                                    <img src="<?php echo Ct_View_Helper_Gallery::largeImageUrl($image) ?>" <?php if(!empty($title)): ?>alt="<?php echo $this->escape($title) ?>"<?php endif ?>/>
+                            </div><?php endfor ?>
+                        </div>
+                        <a class="carousel-control carousel-control-prev" role="button" data-slide="prev" href="#lb-gallery1-k">
+                            <span class="mbri-left mbr-iconfont" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control carousel-control-next" role="button" data-slide="next" href="#lb-gallery1-k">
+                            <span class="mbri-right mbr-iconfont" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                        <a class="close" href="#" role="button" data-dismiss="modal">
+                            <span class="sr-only">Close</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+<section class="mbr-section mbr-section__container article" id="location">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="mbr-map"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d36125.64146316002!2d7.411310062068293!3d49.16989060849562!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4795d5c14272815f%3A0x68b885057647fe47!2sGerhard+Hauter!5e0!3m2!1sru!2sua!4v1488735502407" frameborder="0" style="border:0" allowfullscreen></iframe></div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="mbr-section article mbr-section__container" id="contacts">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <h3 class="mbr-section-title display-2"><?php echo strtoupper($pages[2]['title_'.$this->language]); ?></h3>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="mbr-section mbr-section__container article" id="contacts-form">
+	<div class="container">
+			<div class="row">
+				<div class="col-xs-offset-1 col-xs-10">
+					<!-- <p><h1><?php echo Ct_Translate::_('contact'); ?></h1></p> -->
+					<form novalidate action="<?php echo $this->url(array('controller'=>'contact', 'action'=>'send', 'module'=>'default'), 'default');?>" method="post" data-form-title="Kontakt" id="contact_form">
+
+					    <div class="row row-sm-offset">
+
+					        <div class="col-xs-12 col-md-4">
+					            <div class="form-group">
+					                <label class="form-control-label" for="form1-i-name"><?php echo Ct_Translate::_('name'); ?><span class="form-asterisk">*</span></label>
+					                <input class="form-control" name="name" required="" data-form-field="Name" id="form1-i-name" type="text">
+					                <div id="id_name" class="at-error-msg"></div>
+					            </div>
+					        </div>
+
+					        <div class="col-xs-12 col-md-4">
+					            <div class="form-group">
+					                <label class="form-control-label" for="form1-i-email"><?php echo Ct_Translate::_('email'); ?><span class="form-asterisk">*</span></label>
+					                <input class="form-control" name="email" required="" data-form-field="Email" id="form1-i-email" type="email">
+					                <div id="id_email" class="at-error-msg"></div>
+					            </div>
+					        </div>
+
+					        <div class="col-xs-12 col-md-4">
+					            <div class="form-group">
+					                <label class="form-control-label" for="form1-i-phone"><?php echo Ct_Translate::_('phone'); ?></label>
+					                <input class="form-control" name="phone" data-form-field="Phone" id="form1-i-phone" type="tel">
+					            </div>
+					        </div>
+
+					    </div>
+
+					    <div class="form-group">
+					        <label class="form-control-label" for="form1-i-message"><?php echo Ct_Translate::_('message'); ?></label>
+					        <textarea class="form-control" name="message" rows="7" data-form-field="Message" id="form1-i-message"></textarea>
+					    </div>
+
+					    <div><button type="submit" class="btn btn-primary submitform"><span class="btn-text"><?php echo Ct_Translate::_('sendmessage'); ?></span><i class="btn-loader"></i></button></div>
+
+					</form>
+					
+				</div>	
+			</div>
+	</div>
+</section>
+
+    
+    

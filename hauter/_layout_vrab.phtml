@@ -1,0 +1,281 @@
+<?php echo $this->doctype(); ?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<?php
+        if (isset($this->metaDescription) && $this->metaDescription) {
+            $this->headMeta()->appendName('description', $this->metaDescription);
+        } 
+        echo $this->headMeta();
+    ?>
+	<?php echo $this->headStyle(); ?>
+	<?php echo $this->headLink(); ?>
+	<?php
+        $title = Default_Model_UserService::i()->getDomainSetting($this->domainId, 'title_'.$this->language);
+        if ($this->title) {
+            $title .= ' - '.$this->title;
+        }
+        echo $this->headTitle($title);
+    ?>
+    <?php
+		$link = $this->headLink()->prependStylesheet($this->baseUrl('/css/jquery/ui-lightness/jquery-ui-1.8.4.custom.css'))
+                        ->headLink(
+							array(
+								'rel' => 'SHORTCUT ICON',
+								'type' => 'image/x-icon',
+								'href' => $this->baseUrl('/img/favico.ico')
+							),
+							'PREPEND');
+
+		if (isset($this->theme) && ($this->theme)) {
+			$link->appendStylesheet($this->baseUrl('/css/'.$this->theme.'/main.css'));
+            
+		} else {
+			$link->prependStylesheet($this->baseUrl('/css/default/main.css'));
+            
+		}
+
+		echo $link;
+    ?>
+	<?php
+        $script = $this->headScript()->prependFile($this->baseUrl('/js/jquery/jquery-1.4.3.min.js'))
+								  ->appendFile($this->baseUrl('/js/jquery/ui/jquery-ui-1.8.4.custom.min.js'))
+								  ->appendFile($this->baseUrl('/js/jquery/jquery.form.js'))
+								  ->appendFile($this->baseUrl('/js/jquery/jquery-cookie.js'))
+							  	  ->appendFile($this->baseUrl('/js/ct.form.js'))
+                                  ->appendFile($this->baseUrl('/js/default.js'))
+								  ->appendFile($this->baseUrl('/js/admin-main.js'));
+        if (($this->domainId>0) && (($this->showTopbar) || (($this->controller == 'index') && ($this->action=='index') ) )) {
+            $script->appendFile($this->baseUrl('/js/random.js'));
+        }
+
+        echo $script;
+
+    ?>
+
+    <?php if (($this->domainId>0) && ($googleAnalytics = Default_Model_UserService::i()->getDomainSetting($this->domainId, 'google_analytics'))) : ?>
+
+        <script type="text/javascript">
+
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', '<?php echo $this->escape($googleAnalytics); ?>']);
+          _gaq.push(['_gat._anonymizeIp']);
+          _gaq.push(['_trackPageview']);
+
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+
+        </script>
+
+    <?php endif; ?>
+</head>
+<body>
+<div class="body-container">
+		<div class="body-container-inner">
+			<div class="wrapper">
+				<div class="header">
+					<?php if ($this->domainId > 0) : ?>
+					<a class="logo" href="<?php echo $this->url(array('action' => 'index', 'controller' => 'index', 'module' => 'default'),'default');?>">
+                        <?php if (($this->domainId > 0) && ($logo = Default_Model_UserService::i()->getDomainSetting($this->domainId, 'logo'))) : ?>
+                            <img src="<?php echo $this->baseUrl('/uploads/logos/'.$logo); ?>" alt="Logo" title="Logo" />
+                        <?php else : ?>
+                            <img src="<?php echo $this->baseUrl('/img/default/logo.png'); ?>" alt="Logo" title="Logo" />
+                        <?php endif; ?>
+					</a>
+					<?php endif; ?>
+					<div class="headerslogan">
+						<p class="slogan"><?php echo Ct_Translate::_('header_slogan'); ?></p>
+					</div>
+					<div class="language">
+						<?php if ($this->language == 'en') : ?>
+                            <?php if (isset($this->langSlug) && ($this->langSlug)) : ?>
+                                <a href="<?php echo $this->url(array('action' => $this->langSlug, 'controller' => 'pages', 'module' => 'default', 'language'=>'de'),'default'); ?>"><img alt="Gernman version" title="German version" src="<? echo $this->baseUrl('/img/flags/de.gif'); ?>" /></a>
+                            <?php else: ?>
+                                <?php $params = array('action' => $this->action, 'controller' => $this->controller, 'module' => $this->module, 'language'=>'de'); ?>
+                                <?php if ($this->controller == 'horse') : ?>
+                                    <?php $params['id'] = $this->horse['id']; ?>
+                                <?php endif; ?>
+                                <a href="<?php echo $this->url($params,'default'); ?>"><img alt="Gernman version" title="German version" src="<? echo $this->baseUrl('/img/flags/de.gif'); ?>" /></a>
+                            <?php endif; ?>
+						<?php else: ?>
+                            <?php if (isset($this->langSlug) && ($this->langSlug)) : ?>
+                                <a href="<?php echo $this->url(array('action' => $this->langSlug, 'controller' => 'pages', 'module' => 'default', 'language'=>'en'),'default'); ?>"><img alt="English version" title="English version" src="<? echo $this->baseUrl('/img/flags/en.gif'); ?>" /></a>
+                            <?php else: ?>
+                                <?php $params = array('action' => $this->action, 'controller' => $this->controller, 'module' => $this->module, 'language'=>'en'); ?>
+                                <?php if ($this->controller == 'horse') : ?>
+                                    <?php $params['id'] = $this->horse['id']; ?>
+                                <?php endif; ?>
+                                <a href="<?php echo $this->url($params,'default'); ?>"><img alt="English version" title="English version" src="<? echo $this->baseUrl('/img/flags/en.gif'); ?>" /></a>
+                            <?php endif; ?>
+						<?php endif; ?>
+					</div>
+					<div class="al-clear"></div>
+				</div>
+                <?php $categories = Admin_Model_HorseService::i()->getPublicCategoryOptions(); ?>
+				<div id="menu-column">
+					<ul class="admin-menu">
+						<?php if ($this->domainId > 0) : ?>
+						<?php
+							$this->menu = Admin_Model_MenuService::i()->getMenu($this->domainId);
+							$title_lang = 'title_'.$this->language;
+						?>
+						<?php foreach ($this->menu as $item) : ?>
+							<?php
+								if ($item['type'] == 'url') {
+									$url = $item['url'];
+								} elseif ($item['type'] == 'default') {
+									$url = '/'.$this->language.$item['url'];
+								} else {
+                                    $slug = $item['slug_'.$this->language];
+									$url = $this->url(array('action' => $slug, 'controller' => 'pages', 'module' => 'default', 'language'=>$this->language),'default');
+								}
+							?>
+							<li class="admin-menu-block" <?php if ($item['int_name'] == 'horses') : ?>id="horses_top_menu"<?php endif;?>>
+								<a href="<?php echo $url; ?>" class="admin-menu-header"><?php echo $this->escape($item[$title_lang]); ?></a>
+                                <?php if ($item['int_name'] == 'horses') : ?>
+                                    <div id="horses-top-menu-categories">
+                                        <?php foreach ($categories as $k=>$category) : ?>
+                                            <p><a href="<?php echo $this->url(array('action' => 'index', 'controller' => 'search', 'module' => 'default', 'language'=>$this->language),'default');?>?filter[category_id]=<?php echo $k; ?>"><?php echo $category; ?></a></p>
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php endif; ?>
+							</li>
+						<?php endforeach; ?>
+
+						<?php endif; ?>
+						<?php if ($this->currentUser['role'] == Default_Model_User::ROLE_USER) : ?>
+						<li class="admin-menu-block">
+							<a href="<?php echo $this->url(array('action' => 'index', 'controller' => 'profile', 'module' => 'admin'),'default');?>" class="admin-menu-header" id="menu-dashboard"><?php echo Ct_Translate::_('admin_panel'); ?></a>
+						</li>
+						<?php endif; ?>
+					</ul>
+				</div>
+				<div class="al-clear"></div>
+				
+				<div class="content">
+					<?php if ($this->action == 'sign-in') : ?>
+						<?php echo $this->partial('_messages.phtml', array('list' => $this->messages, 'error' => $this->warning));?>
+						<?php echo $this->layout()->content; ?>
+					<?php else: ?>
+					<div class="inner-content">
+                        <input type="hidden" id="param_thumbs_url" value="<?php echo $this->baseUrl('/uploads/photos/thumbs/'); ?>" />
+                        <input type="hidden" id="param_no_preview" value="<?php echo $this->baseUrl('/img/default/no-preview-small.png');?>" />
+                        
+						<div id="content-column">
+                            <div id="content-left-side" <?php if (!(($this->domainId > 0) && ($this->showSidebar))) : ?>style="width: 100%;"<?php endif; ?>>
+                                <?php echo $this->partial('_messages.phtml', array('list' => $this->messages, 'error' => $this->warning));?>
+
+                                <?php if (($this->domainId>0) && (($this->showTopbar) )) : ?>
+                                    <?php $this->headScript()->prependFile($this->baseUrl('/js/random.js')); ?>
+                                    <input type="hidden" id="param_random_url" value="<?php echo $this->url(array('action' => 'get-random-horses', 'controller' => 'index', 'module' => 'default'),'default'); ?>" />
+                                    <input type="hidden" id="param_load_main_url" value="<?php echo $this->url(array('action' => 'load-random', 'controller' => 'index', 'module' => 'default', 'language'=>$this->language),'default'); ?>" />
+                                    <input type="hidden" id="horse_details_url" value="<?php echo $this->url(array('action' => 'view', 'controller' => 'horse', 'module' => 'default', 'language'=>$this->language),'default'); ?>" />
+
+                                    <div class="box-title"><?php echo Ct_Translate::_('random_horse'); ?></div>
+                                    <div class="clear-both"></div>
+                                    <div class="random-horse">
+                                        <div class="random-left" id="random_main">
+                                        </div>
+                                        <div class="random-other-horses">
+                                            <h3><?php echo Ct_Translate::_('other_horses'); ?></h3>
+                                            <ul id="random_horses_list"></ul>
+                                        </div>
+                                    </div>
+                                    <div class="al-clear"></div>
+                                <?php endif; ?>
+        						<?php echo $this->layout()->content; ?>
+                            </div>
+
+                            <?php if (($this->domainId > 0) && ($this->showSidebar)) : ?>
+                            <?php
+                                $period = Default_Model_UserService::i()->getDomainSetting($this->domainId, 'recently_updated_period');
+                                $recentlyList = Admin_Model_HorseService::i()->getRecentlyUpdated($this->domainId, $period);
+
+                                if (count($recentlyList)) :
+                            ?>
+                            <input type="hidden" id="param_recently_url" value="<?php echo $this->url(array('action' => 'get-recently-updated', 'controller' => 'index', 'module' => 'default'),'default'); ?>" />
+                            <div id="content-right-side">
+                                <div class="box-title"><?php echo Ct_Translate::_('recently_updated'); ?></div>
+                                <ul id="recently_updated">
+                                    <?php foreach ($recentlyList as $item) : ?>
+                                    <li>
+                                        <p class="recently-updated-category"><?php echo $item['category']; ?></p>
+                                        <?php $seoText = Ct_Translate::_($item['category']).' '.Ct_Translate::_('from').' '.$this->escape($item['father']).' x '.$this->escape($item['mothers_father']); ?>
+                                        <a href="<?php echo $this->url(array('id' => $item['id'], 'title' => str_replace(array('/', ' '), array('-', '-'), $seoText), 'category'=>$item['category']), 'horseml'); ?>">
+                                            <?php if ($item['filename']) : ?>
+                                                <img src="<?php echo $this->baseUrl('/uploads/photos/thumbs/'.$item['filename']);?>" alt="<?php echo $seoText; ?>" title="<?php echo $seoText; ?>" />
+                                            <?php else : ?>
+                                                <img src="<?php echo $this->baseUrl('/img/default/no-preview-small.png');?>" alt="<?php echo $seoText; ?>" title="<?php echo $seoText; ?>" />
+                                            <?php endif; ?>
+                                        </a>
+                                        <div class="al-clear"></div>
+                                        <p><?php echo Ct_Translate::_('age'); ?>: <?php echo $item['age']; ?></p>
+                                        <p><?php echo Ct_Translate::_('father'); ?>: <?php echo $this->escape($item['father']); ?></p>
+                                    </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                                <div class="al-clear"></div>
+                                <?php if (isset($this->showTags) && ($this->showTags)) : ?>
+                                    <?php $tags = Admin_Model_TagService::i()->getTags($this->domainId); ?>
+                                    <?php
+                                        if (!function_exists('composeURL')) {
+                                            function composeURL($params, $arrayName) {
+                                                $tempParams = array();
+                                                foreach ($params as $k=>$v) {
+                                                    $tempParams[] = $arrayName.'['.$k.']='.$v;
+                                                }
+                                                $url = implode('&', $tempParams);
+
+                                                return $url;
+                                            }
+                                        }
+                                    ?>
+                                    <div class="tags-list">
+                                        <div class="box-title"><?php echo Ct_Translate::_('tags'); ?></div>
+                                        <ul>
+                                            <?php foreach ($tags as $tag) : ?>
+                                                <?php /* $filterParams = composeURL(unserialize($tag['data']), 'filter'); ?>
+                                                <li><a href="<?php echo $this->url(array('action' => 'index', 'controller' => 'search', 'module' => 'default', 'language'=>$this->language),'default').'?'.$filterParams; ?>"><?php echo $this->escape($tag['tag_'.$this->language]); ?></a></li> */ ?>
+                                                <li><a href="<?php echo $this->url(array('tag'=>$tag['tag_'.$this->language], 'tag_id'=>$tag['id']),'tagml'); ?>"><?php echo $this->escape($tag['tag_'.$this->language]); ?></a></li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                            <?php else : ?>
+                                <script type="text/javascript">
+                                    $('#content-left-side').css('width', '100%');
+                                </script>
+                            <?php endif; ?>
+                            <?php endif; ?>
+                            <div class="al-clear"></div>
+						</div>
+						<div class="al-clear"></div>
+					</div>
+					<?php endif; ?>
+				</div>
+				<div class="al-clear"></div>
+
+				<div class="push"></div>
+				<div class="al-clear"></div>
+			</div>
+			<div class="footer">
+                <p>
+                <?php if ($this->currentUser['role'] == Default_Model_User::ROLE_USER) : ?>
+                    <a href="<?php echo $this->url(array('action' => 'sign-out', 'controller' => 'index', 'module' => 'default'),'default');?>" class="admin-menu-header" id="menu-dashboard"><?php echo Ct_Translate::_('logout'); ?></a>
+                <?php else : ?>
+                    <a href="<?php echo $this->url(array('action' => 'sign-in', 'controller' => 'index', 'module' => 'default'),'default');?>" class="admin-menu-header" id="menu-dashboard"><?php echo Ct_Translate::_('sign_in'); ?></a>
+                <?php endif; ?>
+                </p>
+				<div class="al-right" style="position: absolute; right: 0; top: 0;">
+                        <?php echo Ct_Translate::_('footer_place_for_logo'); ?>
+                    </div>
+			</div>
+			<div class="al-clear"></div>
+		</div>
+	</div>	
+</body>
+</html>

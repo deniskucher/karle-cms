@@ -1,0 +1,279 @@
+<div class="separate-page-header article">
+    <div class="container">
+        <?php if (isset($this->flowplayer)) : ?>
+            <?php echo $this->render('/horse/view-flowplayer.phtml'); ?>
+        <?php else: ?>
+
+        <?php
+            $levels = Admin_Model_HorseService::i()->getLevelOptions();
+            $prices = Admin_Model_HorseService::i()->getPriceOptions($this->domainId);
+            $colors = Admin_Model_HorseService::i()->getColorOptions();
+            $sexes = Admin_Model_HorseService::i()->getSexOptions();
+            $pedigree = unserialize($this->horse['pedigree']);
+            
+            function is_empty($_pedigree)
+            {
+                foreach ($_pedigree as $value)
+                {
+                    if (is_array($value)) { if (!is_empty($value)) return false; }
+                    else { if ($value != '') return false; }
+                }
+                return true;
+            }
+            
+            $pedigree = (empty($pedigree) or is_empty($pedigree)) ? null : $pedigree;
+            if ($pedigree)
+            {
+                foreach ($pedigree as $k => $v)
+                {
+                    if (!isset($v['h'])) $pedigree[$k]['h']=0;
+                    if (!isset($v['name'])) $pedigree[$k]['name']=' ';
+                }
+            }
+        ?>
+        <div class="html">
+            <h1>
+                <?php if ($this->resolvedHorseCategoryId == 5) : ?>
+                    <?php echo $this->escape($this->horse['name']) ?>, <?php echo $this->language=='en' ? mb_strtolower(Ct_Translate::_('Breeding Stallion'), 'utf8') : Ct_Translate::_('Breeding Stallions') ?> <?php echo Ct_Translate::_('from') ?> <?php echo $this->escape($pedigree['f']['name']) ?> x <?php echo $this->escape($pedigree['mf']['name']) ?>
+                <?php else : ?>
+                    <?php echo $this->horse['age'].'-'.Ct_Translate::_(($this->horse['sex']?'years_old':'years_old_mare')).' '.Ct_Translate::_($sexes[$this->horse['sex']]).' '.Ct_Translate::_('from').' '.$this->escape($this->horse['father']); ?>
+                <?php endif ?>
+            </h1>
+            <p><a href="<?php echo $this->url(array('action' => 'index', 'controller' => 'search', 'module' => 'default'),'default');?>?filter[category_id]=<?php echo $this->resolvedHorseCategoryId; ?>"><?php echo Ct_Translate::_('back_to_list') ?></a><?php if($pedigree): ?>&nbsp;&nbsp;&nbsp;<a href="#pedigree"><?php echo Ct_Translate::_('pedigree') ?></a><?php endif ?><?php if (count($this->horse['photos'])) : ?>&nbsp;&nbsp;&nbsp;<a href="#photos"><?php echo Ct_Translate::_('photos') ?></a><?php endif ?><?php if(count($this->horse['videos'])) : ?>&nbsp;&nbsp;&nbsp;<a href="#videos"><?php echo Ct_Translate::_('videos') ?></a><?php endif ?></p>
+        </div>
+        <?php
+            $height = $this->horse['height'].Ct_Translate::_('cm');
+            if ($this->language == 'en') $height = number_format($this->horse['height']*0.0984, 2).' '.Ct_Translate::_('hands');
+            $seoText = Ct_Translate::_($this->horse['category']).' '.Ct_Translate::_('from').' '.$this->escape($this->horse['father']).' x '.$this->escape($this->horse['mothers_father']);
+        ?>
+        <div class="container-gallery container-gallery-thumbs container-gallery-horse-details">
+            <div class="row row-horse-data">
+                <div class="col col-md-6 col-sm-12">
+                    <div class="col-inner">
+                        <div class="caption" style="height: 70px; line-height: 70px; text-align: center; font-size: 30px;"><?php echo mb_strtoupper($this->escape($this->horse['name']), 'utf8') ?></div>
+                        <img class="img-responsive" src="<?php echo Ct_View_Helper_Horses::coverMediumImageUrl($this->horse) ?>" alt="<?php echo $seoText; ?>" title="<?php echo $seoText; ?>" />
+                    </div>
+                </div>
+                <div class="col col-md-6 col-sm-12 col-horse-data">
+                    <div class="row"><div class="col col-md-12 col-sm-12" style="margin-bottom: 0"><p class="name"><?php echo mb_strtoupper($this->escape($this->horse['name']), 'utf8') ?></p></div></div>
+                    <div class="row">
+                        <?php if ($this->resolvedHorseCategoryId==5) : ?>
+                            <?php $semenTypes = Admin_Model_HorseService::i()->getSemenTypeOptions() ?>
+                            <div class="col col-md-12 col-sm-12">
+                                <p><strong><?php echo Ct_Translate::_('breeding_area') ?>:</strong> <?php echo $this->escape($this->horse['breeding_area']) ?></p>
+                                <p><strong><?php echo Ct_Translate::_('color') ?>:</strong> <?php echo $colors[$this->horse['color']] ?></p>
+                                <p><strong><?php echo Ct_Translate::_('age') ?>:</strong> <?php echo ($this->horse['age']) ?></p>
+                                <p><strong><?php echo Ct_Translate::_('height') ?>:</strong> <?php echo $this->escape($height) ?></p>
+                                <p><strong><?php echo Ct_Translate::_('semen_type') ?>:</strong> <?php echo $this->escape($semenTypes[$this->horse['semen_type']]) ?></p>
+                            </div>
+                        <?php elseif ($this->resolvedHorseCategoryId == 6) : ?>
+                            <div class="col col-md-6 col-sm-6">
+                                <p><strong><?php echo Ct_Translate::_('sex') ?>:</strong> <?php echo $sexes[$this->horse['sex']] ?></p>
+                                <p><strong><?php echo Ct_Translate::_('color') ?>:</strong> <?php echo $colors[$this->horse['color']] ?></p>
+                                <p><strong><?php echo Ct_Translate::_('height') ?>:</strong> <?php echo $this->escape($height) ?></p>
+                            </div>
+                            <div class="col col-md-6 col-sm-6">
+                                <p><strong><?php echo Ct_Translate::_('breeding_area') ?>:</strong> <?php echo $this->escape($this->horse['breeding_area']) ?></p>
+                                <p><strong><?php echo Ct_Translate::_('father') ?>:</strong> <?php echo $this->escape($this->horse['father']) ?></p>
+                                <p><strong><?php echo Ct_Translate::_('mothers_father') ?>:</strong> <?php echo $this->escape($this->horse['mothers_father']) ?></p>
+                            </div>
+                        <?php else : ?>
+                            <div class="col col-md-6 col-sm-6">
+                                <p><strong><?php echo Ct_Translate::_('sex') ?>:</strong> <?php echo $sexes[$this->horse['sex']] ?></p>
+                                <p><strong><?php echo Ct_Translate::_('age') ?>:</strong> <?php echo ($this->horse['age']) ?></p>
+                                <p><strong><?php echo Ct_Translate::_('color') ?>:</strong> <?php echo $colors[$this->horse['color']] ?></p>
+                                <p><strong><?php echo Ct_Translate::_('height') ?>:</strong> <?php echo $this->escape($height) ?></p>
+                                <p><strong><?php echo Ct_Translate::_('level') ?>:</strong> <?php echo $levels[$this->horse['level']] ?></p>
+                                <p><strong><?php echo Ct_Translate::_('successful_to') ?>:</strong> <?php echo $levels[$this->horse['successful_to']] ?></p>
+                            </div>
+                            <div class="col col-md-6 col-sm-6">
+                                <p><strong><?php echo Ct_Translate::_('breeding_area') ?>:</strong> <?php echo $this->escape($this->horse['breeding_area']) ?></p>
+                                <p><strong><?php echo Ct_Translate::_('father') ?>:</strong> <?php echo $this->escape($this->horse['father']) ?></p>
+                                <p><strong><?php echo Ct_Translate::_('mothers_father') ?>:</strong> <?php echo $this->escape($this->horse['mothers_father']) ?></p>
+                            </div>
+                        <?php endif ?>
+                    </div>
+                    <?php if(!(!empty($this->domainOptions['HORSES']['hide_stallion_price_range']) and $this->domainOptions['HORSES']['hide_stallion_price_range']==1)) : ?>
+                        <div class="row"><div class="col col-md-6 col-sm-6"><p><strong><?php echo Ct_Translate::_('price_range') ?>:</strong> <?php echo $prices[$this->horse['price_id']] ?></p></div></div>
+                    <?php endif ?>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid container-pedigree">
+            <?php if ($pedigree) : ?>
+                <div class="html"><h2><a id="pedigree">Pedigree</a></h2></div>
+                <div class="row">
+                    <div class="col col-md-12">
+                        <table class="pedigree-container">
+                            <tbody>
+                                <tr>
+                                    <td rowspan="4">
+                                        <span <?php if ($pedigree['f']['h']) : ?>class="highlight"<?php endif; ?>>
+                                            <?php echo $this->escape($pedigree['f']['name']); ?>
+                                        </span>
+                                    </td>
+                                    <td rowspan="2">
+                                        <span <?php if ($pedigree['ff']['h']) : ?>class="highlight"<?php endif; ?>>
+                                            <?php echo $this->escape($pedigree['ff']['name']); ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span <?php if ($pedigree['fff']['h']) : ?>class="highlight"<?php endif; ?>>
+                                            <?php echo $this->escape($pedigree['fff']['name']); ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span <?php if ($pedigree['ffff']['h']) : ?>class="highlight"<?php endif; ?>>
+                                            <?php echo $this->escape($pedigree['ffff']['name']); ?>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><span <?php if ($pedigree['ffm']['h']) : ?>class="highlight"<?php endif; ?>>
+                                        <?php echo $this->escape($pedigree['ffm']['name']); ?>
+                                    </span></td>
+                                    <td><span <?php if ($pedigree['ffmf']['h']) : ?>class="highlight"<?php endif; ?>>
+                                        <?php echo $this->escape($pedigree['ffmf']['name']); ?>
+                                    </span></td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="2">
+                                        <span <?php if ($pedigree['fm']['h']) : ?>class="highlight"<?php endif; ?>>
+                                            <?php echo $this->escape($pedigree['fm']['name']); ?>
+                                        </span>
+                                    </td>
+                                    <td><span <?php if ($pedigree['fmf']['h']) : ?>class="highlight"<?php endif; ?>>
+                                        <?php echo $this->escape($pedigree['fmf']['name']); ?>
+                                    </span></td>
+                                    <td><span <?php if ($pedigree['fmff']['h']) : ?>class="highlight"<?php endif; ?>>
+                                        <?php echo $this->escape($pedigree['fmff']['name']); ?>
+                                    </span></td>
+                                </tr>
+                                <tr>
+                                    <td><span <?php if ($pedigree['fmm']['h']) : ?>class="highlight"<?php endif; ?>>
+                                        <?php echo $this->escape($pedigree['fmm']['name']); ?>
+                                    </span></td>
+                                    <td><span <?php if ($pedigree['fmmf']['h']) : ?>class="highlight"<?php endif; ?>>
+                                        <?php echo $this->escape($pedigree['fmmf']['name']); ?>
+                                    </span></td>
+                                </tr>
+                                <tr>
+                                    <td class="bottom" rowspan="4">
+                                        <span <?php if ($pedigree['m']['h']) : ?>class="highlight"<?php endif; ?>>
+                                            <?php echo $this->escape($pedigree['m']['name']); ?>
+                                        </span>
+                                    </td>
+                                    <td class="rot" rowspan="2"><span <?php if ($pedigree['mf']['h']) : ?>class="highlight"<?php endif; ?>>
+                                        <?php echo $this->escape($pedigree['mf']['name']); ?>
+                                    </span></td>
+                                    <td><span <?php if ($pedigree['mff']['h']) : ?>class="highlight"<?php endif; ?>>
+                                        <?php echo $this->escape($pedigree['mff']['name']); ?>
+                                    </span></td>
+                                    <td><span <?php if ($pedigree['mfff']['h']) : ?>class="highlight"<?php endif; ?>>
+                                        <?php echo $this->escape($pedigree['mfff']['name']); ?>
+                                    </span></td>
+                                 </tr>
+                                <tr>
+                                   <td><span <?php if ($pedigree['mfm']['h']) : ?>class="highlight"<?php endif; ?>>
+                                        <?php echo $this->escape($pedigree['mfm']['name']); ?>
+                                    </span></td>
+                                   <td><span <?php if ($pedigree['mfmf']['h']) : ?>class="highlight"<?php endif; ?>>
+                                        <?php echo $this->escape($pedigree['mfmf']['name']); ?>
+                                    </span></td>
+                                </tr>
+                                <tr>
+                                   <td class="bottom" rowspan="2"><span <?php if ($pedigree['mm']['h']) : ?>class="highlight"<?php endif; ?>>
+                                        <?php echo $this->escape($pedigree['mm']['name']); ?>
+                                    </span></td>
+                                   <td class="rot"><span <?php if ($pedigree['mmf']['h']) : ?>class="highlight"<?php endif; ?>>
+                                        <?php echo $this->escape($pedigree['mmf']['name']); ?>
+                                    </span></td>
+                                   <td><span <?php if ($pedigree['mmff']['h']) : ?>class="highlight"<?php endif; ?>>
+                                        <?php echo $this->escape($pedigree['mmff']['name']); ?>
+                                    </span></td>
+                                </tr>
+                                <tr>
+                                   <td class="bottom"><span <?php if ($pedigree['mmm']['h']) : ?>class="highlight"<?php endif; ?>>
+                                        <?php echo $this->escape($pedigree['mmm']['name']); ?>
+                                    </span></td>
+                                   <td class="rot bottom"><span <?php if ($pedigree['mmmf']['h']) : ?>class="highlight"<?php endif; ?>>
+                                        <?php echo $this->escape($pedigree['mmmf']['name']); ?>
+                                    </span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            <?php endif ?>
+        </div>
+        <?php $description = $this->language == 'de' ? $this->horse['description'] : $this->horse['description_en'] ?>
+        <div class="row row-horse-data">
+            <?php if ($this->resolvedHorseCategoryId == 6) : ?>
+                <?php if($description) : ?>
+                    <div class="col col-md-12 col-horse-data">
+                        <p class="text-block">
+                            <h2 class="title"><a id="description" class="title-separate-page"><?php echo Ct_Translate::_('description') ?>:</a></h2>
+                            <?php echo nl2br($this->escape($description)) ?>
+                        </p>
+                    </div>
+                <?php endif ?>
+            <?php else : ?>
+                <?php if($description) : ?>
+                    <div class="col col-md-6 col-sm-12">
+                        <p class="text-block">
+                            <h2 class="title"><a id="description" class="title-separate-page"><?php echo Ct_Translate::_('description') ?>:</a></h2>
+                            <?php echo nl2br($this->escape($description)) ?>
+                        </p>
+                    </div>
+                <?php endif ?>
+                <?php $successes = $this->language == 'de' ? $this->horse['successes'] : $this->horse['successes_en'] ?>
+                <?php if($successes) : ?>
+                    <div class="col col-md-6 col-sm-12">
+                        <p class="text-block">
+                            <?php if ($this->resolvedHorseCategoryId==5) : ?>
+                                <h2 class="title"><a id="issues"><?php echo Ct_Translate::_('issues') ?>:</a></h2>
+                            <?php else : ?>
+                                <h2 class="title"><a id="successes" class="title-separate-page"><?php echo Ct_Translate::_('successes') ?>:</a></h2>
+                            <?php endif ?>
+                            <?php echo nl2br($this->escape($successes)) ?>
+                        </p>
+                    </div>
+                <?php endif ?>
+            <?php endif ?>
+        </div>
+        <?php if (count($this->horse['photos'])) : ?>
+            <div class="html"><h2><a id="photos" class="title-separate-page">Photos</a></h2></div>
+            <div class="container-fluid container-gallery container-gallery-thumbs container-gallery-horse-thumbs">
+                <div class="row">
+                    <?php foreach ($this->horse['photos'] as $photo) : ?>
+                        <div class="col col-lg-3 col-md-4 col-sm-6 col-xs-6">
+                            <a class="col-inner" data-gallery href="<?php echo Ct_View_Helper_Horses::largePhotoUrl($photo) ?>" <?php if(!empty($photo['name'])): ?>title="<?php echo $this->escape($photo['name']) ?>"<?php endif ?>>
+                                <?php if(!empty($photo['name'])): ?><div class="caption"><?php echo $this->escape($photo['name']) ?></div><?php endif ?>
+                                <div class="thumb" style="background-image: url('<?php echo Ct_View_Helper_Horses::photoThumbnailUrl($photo) ?>')"></div>
+                            </a>
+                        </div>
+                    <?php endforeach ?>
+                </div>
+            </div>
+        <?php endif ?>
+        <?php if (count($this->horse['videos'])) : ?>
+            <div class="html"><h2><a id="videos class="title-separate-page"">Videos</a></h2></div>
+            <div class="container-fluid container-gallery container-gallery-thumbs container-gallery-horse-thumbs">
+                <div class="row">
+                    <?php foreach ($this->horse['videos'] as $video) : ?>
+                        <div class="col col-lg-3 col-md-4 col-sm-6 col-xs-6">
+                            <a class="col-inner" data-gallery type="video/mp4" data-quality="<?php echo $video['default_quality'] ?>" data-poster="<?php echo Ct_View_Helper_Horses::videoPosterUrl($this->domainId, $this->horse['id'], $video['id']) ?>" href="<?php echo Ct_View_Helper_Horses::videoUrl($this->domainId, $this->horse['id'], $video['id'], $video['default_quality']) ?>" <?php if(!empty($video['title'])): ?>title="<?php echo $this->escape($video['title']) ?>"<?php endif ?>>
+                                <?php if(!empty($video['title'])): ?><div class="caption">gfdg<?php echo $this->escape($video['title']) ?></div><?php endif ?>
+                                <div class="icon-play"></div>
+                                <div class="thumb" style="background-image: url('<?php echo Ct_View_Helper_Horses::videoThumbUrl($this->domainId, $this->horse['id'], $video['id']) ?>')"></div>
+                            </a>
+                        </div>
+                    <?php endforeach ?>
+                </div>
+            </div>
+        <?php endif ?>
+
+        <?php endif ?>
+        
+    </div>
+</div>

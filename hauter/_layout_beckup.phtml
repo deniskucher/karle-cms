@@ -1,0 +1,441 @@
+<?php echo $this->doctype(); ?>
+<html class="desktop mbr-site-loaded">
+
+    <head>
+        <!-- Site made with Mobirise Website Builder v3.11.1, https://mobirise.com -->
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <?php
+            if (isset($this->metaDescription) && $this->metaDescription) {
+                $this->headMeta()->appendName('description', $this->metaDescription);
+            }
+            echo $this->headMeta();
+        ?>
+        <?php echo $this->headStyle(); ?>
+        <?php echo $this->headLink(); ?>
+        <?php
+            $title = Default_Model_UserService::i()->getDomainSetting($this->domainId, 'title_'.$this->language);
+            if ($this->title) {
+                $title .= ' - '.$this->title;
+            }
+            echo $this->headTitle($title);
+        ?>
+        <?php
+            $link = $this->headLink()->prependStylesheet($this->baseUrl('/css/jquery/ui-lightness/jquery-ui-1.8.4.custom.css'))
+                        ->headLink(
+                            array(
+                                'rel' => 'SHORTCUT ICON',
+                                'type' => 'image/x-icon',
+                                'href' => $this->baseUrl('/img/'.$this->theme.'/favico.ico')
+                            ),
+                            'PREPEND');
+                        
+            if (isset($this->theme) && ($this->theme)) {
+                $link->appendStylesheet('https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic&amp;subset=latin')
+                    ->appendStylesheet($this->baseUrl('/plugins/bootstrap_fewo/css/bootstrap.min.css'))
+                    ->appendStylesheet($this->baseUrl('/plugins/dropdown/css/style.css'))
+                    ->appendStylesheet($this->baseUrl('/css/'.$this->theme.'/style.css'))
+                    ->appendStylesheet($this->baseUrl('/plugins/mobirise/css/mbr-additional.css'));
+                  
+            } else {
+                $link->prependStylesheet($this->baseUrl('/css/default/main.css'));
+                
+            }
+
+            echo $link;
+        ?>
+    
+        <?php
+            $script = $this->headScript()->prependFile($this->baseUrl('/js/jquery/jquery-1.12.4.min.js'))
+                                      ->appendFile($this->baseUrl('/js/jquery/ui/jquery-ui-1.8.4.custom.min.js'))
+                                      ->appendFile($this->baseUrl('/js/ct.form.js'))
+                                      ->appendFile($this->baseUrl('/js/jquery/jquery.form.js'))
+                                      ->appendFile($this->baseUrl('/js/jquery/jquery-cookie.js'))
+                                      ->appendFile($this->baseUrl('/js/default.js'))
+                                      ->appendFile($this->baseUrl('/js/admin-main.js'))
+                                      ->appendFile($this->baseUrl('/js/jarallax/jarallax.js'));
+                                      
+
+            // if (($this->domainId>0) && (($this->showTopbar) || (($this->controller == 'index') && ($this->action=='index') ) )) {
+            //     $script->appendFile($this->baseUrl('/js/random.js'));
+            // }
+
+            echo $script;
+
+        ?>
+
+        <?php if (($this->domainId>0) && ($googleAnalytics = Default_Model_UserService::i()->getDomainSetting($this->domainId, 'google_analytics'))) : ?>
+
+            <script type="text/javascript">
+
+              var _gaq = _gaq || [];
+              _gaq.push(['_setAccount', '<?php echo $this->escape($googleAnalytics); ?>']);
+              _gaq.push(['_gat._anonymizeIp']);
+              _gaq.push(['_trackPageview']);
+
+              (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+              })();
+
+            </script>
+
+        <?php endif; ?>
+        
+    </head>
+<body>
+    <section id="ext_menu-0">
+
+        <nav class="navbar navbar-dropdown navbar-fixed-top" id="header">
+            <div class="container">
+
+                <div class="mbr-table">
+                    <div class="mbr-table-cell">
+
+                        <div class="navbar-brand">
+                            <a href="<?php echo $this->baseUrl() ?>" class="navbar-logo">
+                                <img src="/uploads/logos/image_49_148638395121732300.png" alt="<?php echo $this->settings['title_'.$this->language] ?>" title="<?php echo $this->settings['title_'.$this->language] ?>">
+                            </a>
+                            <a class="navbar-caption full" href="<?php echo $this->baseUrl()?>">Ferienwohnung Karle</a>
+                            <a class="navbar-caption short" href="<?php echo $this->baseUrl()?>">FW Karle</a>
+                        </div>
+
+                    </div>
+                    <div class="mbr-table-cell">
+
+                        <button class="navbar-toggler pull-xs-right hidden-md-up" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar">
+                            <div class="hamburger-icon"></div>
+                        </button>
+
+                        <ul class="nav-dropdown collapse pull-xs-right nav navbar-nav navbar-toggleable-sm" id="exCollapsingNavbar">
+                            <li class="nav-item">
+                                <a class="nav-link link" href="index.html#header3-c"><?php echo Ct_Translate::_('flat'); ?></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link link" href="index.html#msg-box8-g"><?php echo Ct_Translate::_('location'); ?></a>
+                            </li>
+                            <li class="nav-item nav-btn">
+                                <a class="nav-link btn btn-primary" href="index.html#form1-i"><?php echo Ct_Translate::_('contact'); ?></a>
+                            </li>
+                            <li class="nav-item nav-btn btn-group" id="lang">
+                                <?php foreach ($this->headerMenu as $menuItem) : ?>
+                                    <a class="nav-link btn btn-primary <?php echo isset($menuItem['class'])?$menuItem['class']:'' ?> 
+                                    <?php if($menuItem['selected']): ?>selected<?php endif ?>" href="<?php echo $menuItem['href'] ?>" title="<?php echo $this->escape($menuItem['title']) ?>" <?php if(isset($menuItem['target'])): ?>target="<?php echo $menuItem['target'] ?>"<?php endif ?>><?php echo empty($menuItem['label']) ? '&nbsp' : $this->escape($menuItem['label']) ?></a>
+                                <?php endforeach ?>
+                                
+                            </li>
+
+                        </ul>
+                        <button class="navbar-toggler navbar-close" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar" hidden="">
+                            <div class="close-icon"></div>
+                        </button>
+
+                    </div>
+                </div>
+
+            </div>
+        </nav>
+
+    </section>
+        
+    <!-- <section class="mbr-section-full"> -->
+        <div class="jarallax mbr-section-full mbr-section mbr-section-hero" style="background-image: url('http://ferienwohnung-karle.de/assets/images/aussen-2000x1125-25.jpg');">
+            <div class="demo-table">
+                <!-- <div class="demo-table-cell">
+                    
+                </div> -->
+                <div class="mbr-table-cell">
+                    <div class="container">
+                        <div class="row">
+                            <div class="mbr-section col-md-10 col-md-offset-1 text-xs-center">
+
+                                <h1 class="mbr-section-title display-1">B&amp;B Ferienwohnung Karle</h1>
+                                <p class="mbr-section-lead lead">Ihre Ferienwohnung und Bed and Breakfast B&amp;B mitten im Freiländereck Basel, Freiburg, Mulhouse in Binzen.<br></p>
+                                <div class="mbr-section-btn"><a class="btn btn-lg btn-primary" href="index.html#header3-c"><?php echo Ct_Translate::_('flat'); ?></a> <a class="btn btn-lg btn-white btn-white-outline" href="index.html#msg-box8-g"><?php echo Ct_Translate::_('location'); ?></a> <a class="btn btn-lg btn-white btn-white-outline" href="index.html#form1-i"><?php echo Ct_Translate::_('direction'); ?> &amp; <?php echo Ct_Translate::_('contact'); ?></a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mbr-arrow mbr-arrow-floating" aria-hidden="true">
+                    <a href="#header3-c">
+                        <i class="mbr-arrow-icon"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+   <!--  </section> -->
+    <section class="mbr-section mbr-section__container article" id="header3-c" style="background-color: rgb(255, 255, 255); padding-top: 80px; padding-bottom: 40px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <h3 class="mbr-section-title display-2"><?php echo Ct_Translate::_('flat'); ?></h3>
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="mbr-section article mbr-section__container" id="content1-d" style="background-color: rgb(255, 255, 255); padding-top: 20px; padding-bottom: 20px;">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 lead">
+                    <p>Die Wohnung befindet sich im EG und erstreckt sich über die gesamte untere Etage (ca. 65 m²), hat einen eigenen Hauseingang und Parkmöglichkeiten direkt vor der Haustüre.</p>
+                    <p><br></p>
+                    <p>In der Wohnung befindet sich eine große Küche mit Essbereich. Die 4 Schlafplätze sind auf 2 Schlafzimmer (Hauptzimmer und separates Doppelzimmer)  verteilt mit je einem komfortablen Doppelbett. Das Bad hat eine Dusche und eine Badewanne, das WC befindet sich in einem extra Raum.
+                    </p>
+                    <p><br></p>
+                    <p>Es handelt sich um eine Nichtraucherwohnung, Bitte keine Haustiere.</p>
+                    <p><br></p>
+                    <p>Bettwäsche und Handtücher werden gestellt. Als "Bed-and-Breakfast" inkl. Frühstück.</p>
+                    <p><br></p>
+                    <p>Die Bodenbeläge sind aus Laminat oder Fließen. Geheizt wird mit einer Fußbodenheizung. Ein verschlüsselter Internetanschluss ist zur kostenlosen Nutzung verfügbar.</p>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <section class="mbr-cards mbr-section mbr-section-nopadding" id="features3-a" style="background-color: rgb(255, 255, 255);">
+        <div class="mbr-cards-row row">
+            <div class="mbr-cards-col col-xs-12 col-lg-3" style="padding-top: 80px; padding-bottom: 80px;">
+                <div class="container">
+                  <div class="card cart-block">
+                      <div class="card-img"><img src="http://ferienwohnung-karle.de/assets/images/hauptzimmer-600x337.jpg" class="card-img-top"></div>
+                      <div class="card-block">
+                        <h4 class="card-title">Hauptzimmer</h4>
+                        
+                        <p class="card-text">Im grossen Hauptzimmer befinden sich Doppelbett (200cmx200cm), Schreibtisch, Stuhl mit Rollen, SAT-TV, Couchtisch, zwei Couchsessel sowie ein Kleiderschrank</p>
+                        
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mbr-cards-col col-xs-12 col-lg-3" style="padding-top: 80px; padding-bottom: 80px;">
+                <div class="container">
+                    <div class="card cart-block">
+                        <div class="card-img"><img src="http://ferienwohnung-karle.de/assets/images/wohnkche-600x337.jpg" class="card-img-top"></div>
+                        <div class="card-block">
+                            <h4 class="card-title">Wohnküche</h4>
+                            
+                            <p class="card-text">Voll ausgestattete Küche mit Tisch und vier Stühlen, Backofen, Kühlschrank inkl. Eisfach, Ceran-Kochfeld und Geschirrspülmaschine</p>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mbr-cards-col col-xs-12 col-lg-3" style="padding-top: 80px; padding-bottom: 80px;">
+                <div class="container">
+                    <div class="card cart-block">
+                        <div class="card-img"><img src="http://ferienwohnung-karle.de/assets/images/badezimmer-600x337.jpg" class="card-img-top"></div>
+                        <div class="card-block">
+                            <h4 class="card-title">Wohlfühl-Badezimmer</h4>
+                            
+                            <p class="card-text">Badezimmer mit Badewanne, Dusche und separatem WC</p>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mbr-cards-col col-xs-12 col-lg-3" style="padding-top: 80px; padding-bottom: 80px;">
+                <div class="container">
+                    <div class="card cart-block">
+                        <div class="card-img"><img src="http://ferienwohnung-karle.de/assets/images/schlafzimmer-600x334.jpg" class="card-img-top"></div>
+                        <div class="card-block">
+                            <h4 class="card-title">separates Schlafzimmer</h4>
+                            
+                            <p class="card-text">Separates Schlafzimmer mit Doppebett (140cmx200cm)</p>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+        </div>
+    </section>
+
+    <section class="jarallax mbr-section article" id="msg-box8-g" style="background-image: url('http://ferienwohnung-karle.de/assets/images/basel-2000x667.jpg');">
+       
+        <div class="mbr-overlay" style="opacity: 0.5; background-color: rgb(34, 34, 34);"></div>
+        <!-- <div class="mbr-table-cell"> -->
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2 text-xs-center">
+                        <h3 class="mbr-section-title display-2 white"><?php echo Ct_Translate::_('location'); ?></h3>
+                        <div class="lead-1">
+                            <p>Binzen liegt im Dreiländereck zwischen Basel (CH), Muhlhouse (F) und Lörrach (D).</p>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+           
+    </section>
+    <section class="mbr-section article mbr-section__container" id="content1-f" style="background-color: rgb(255, 255, 255); padding-top: 20px; padding-bottom: 20px;">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 lead">
+                    <p>Binzen liegt im Dreiländereck zwischen <a href="http://basel.ch" target="_blank">Basel (CH)</a>, 
+                    <a href="http://mulhouse.fr" target="_blank">Muhlhouse (F)</a> und <a href="http://loerrach.de" target="_blank">Lörrach (D)</a> in den Ausläufern des südlichen Schwarzwald. Fahrzeiten zu ausgewählten Locations zur Orientierung:</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-5 lead">
+                    <div class="article">
+                        <p><span>Eigenes Auto oder Taxi:</span></p>
+                        <p>-15 Minuten bis Weil am Rhein</p>
+                        <p>- 15 Minuten bis Basel schweizer Bahnhof</p>
+                        <p>- 15 Minuten zur Messe oder zum Fussballstadion</p>
+                    </div>
+                    
+                </div>
+                <div class="col-lg-offset-1 col-lg-5 lead">
+                    <div class="article">
+                        <p><span>Bus: (2 Minuten bis zur Bushaltestelle)</span></p>
+                        <p>- 30 Minuten bis Basel</p>
+                        <p>- 15 Minuten bis Lörrach</p>
+                        <p>- 10 Minuten bis Weil am Rhein</p>
+                    </div>
+                    
+                </div>    
+            </div>
+
+        </div>
+
+    </section>
+
+    <section class="mbr-section" id="form1-i" style="background-color: rgb(255, 255, 255); padding-top: 120px; padding-bottom: 120px;">
+        
+        <div class="mbr-section mbr-section__container mbr-section__container--middle">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12 text-xs-center">
+                        <h3 class="mbr-section-title display-2"><?php echo Ct_Translate::_('contact'); ?></h3>
+                        <small class="mbr-section-subtitle"><?php echo Ct_Translate::_('contactinfo'); ?></small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mbr-section mbr-section-nopadding">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12 col-lg-10 col-lg-offset-1" data-form-type="formoid">
+
+
+                        <div data-form-alert="true">
+                            <div data-form-alert-success="true" class="alert alert-form alert-success text-xs-center" hidden="">Ihre Nachricht wurde versandt.</div>
+                        </div>
+
+
+                        <form action="<?php echo $this->url(array('controller'=>'contact', 'action'=>'send', 'module'=>'default'), 'default');?>" method="post" data-form-title="Kontakt" id="contact_form">
+
+                            <div class="row row-sm-offset">
+
+                                <div class="col-xs-12 col-md-4">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="form1-i-name"><?php echo Ct_Translate::_('name'); ?><span class="form-asterisk">*</span></label>
+                                        <input class="form-control" name="name" required="" data-form-field="Name" id="form1-i-name" type="text">
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12 col-md-4">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="form1-i-email"><?php echo Ct_Translate::_('email'); ?><span class="form-asterisk">*</span></label>
+                                        <input class="form-control" name="email" required="" data-form-field="Email" id="form1-i-email" type="email">
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12 col-md-4">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="form1-i-phone"><?php echo Ct_Translate::_('phone'); ?></label>
+                                        <input class="form-control" name="phone" data-form-field="Phone" id="form1-i-phone" type="tel">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-control-label" for="form1-i-message"><?php echo Ct_Translate::_('message'); ?></label>
+                                <textarea class="form-control" name="message" rows="7" data-form-field="Message" id="form1-i-message"></textarea>
+                            </div>
+
+                            <div><button type="submit" class="btn btn-primary"><span class="btn-text"><?php echo Ct_Translate::_('sendmessage'); ?></span><i class="btn-loader"></i></button></div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="mbr-section mbr-section-md-padding mbr-footer footer2" id="contacts2-4" style="background-color: rgb(46, 46, 46); padding-top: 90px; padding-bottom: 90px;">
+        
+        <div class="container">
+            <div class="row">
+                <div class="mbr-footer-content col-xs-12 col-md-3">
+                    <strong><?php echo Ct_Translate::_('address'); ?></strong>
+                    <div class="article-footer">
+                        <p>Blauenstrasse 41</p>
+                        <p>79589 Binzen</p>
+                    </div>
+                    
+                    <strong><?php echo Ct_Translate::_('contact'); ?></strong>
+                    <div class="article-footer">
+                        <p><?php echo Ct_Translate::_('email'); ?>: info@ferienwohnung-karle.de</p>
+                        <p><?php echo Ct_Translate::_('phone'); ?>: +49 (0) 7621 164733</p>
+                    </div>
+                    
+                </div>
+                <div class="mbr-footer-content col-xs-12 col-md-3">
+                    <strong>Links</strong>
+                    <ul>
+                        <li><a href="index.html#header3-c"><?php echo Ct_Translate::_('flat'); ?></a></li>
+                        <li><a href="index.html#msg-box8-g"><?php echo Ct_Translate::_('location'); ?></a></li>
+                        <li><a href="index.html#form1-i"><?php echo Ct_Translate::_('direction'); ?> &amp; <?php echo Ct_Translate::_('contact'); ?> </a></li>
+                    </ul>
+                </div>
+                <div class="col-xs-12 col-md-6">
+                    <div class="mbr-map"><iframe style="border:0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyA0Dx_boXQiwvdz8sJHoYeZNVTdoWONYkU&amp;q=place_id:ChIJ-bPOnYq6kUcRJyEsNfUEw4M" allowfullscreen="" frameborder="0"></iframe></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="mbr-small-footer mbr-section mbr-section-nopadding" id="footer1-5" style="background-color: rgb(50, 50, 50); padding-top: 1.75rem; padding-bottom: 1.75rem;">
+        
+        <div class="container">
+            <p class="text-xs-center">Copyright (c) 2016 Ferienwohnung-Karle. 
+                <a href="#">Impressum und Datenschutz</a>
+            </p>
+        </div>
+    </footer>
+            
+    <script type="text/javascript">
+        /* init Jarallax */
+        jarallax(document.querySelectorAll('.jarallax'), {});
+        
+    </script>
+
+    <!--<script src="<?php echo $this->baseUrl('/js/jquery/jquery-1.12.4.min.js') ?>"></script>-->
+    <script src="<?php echo $this->baseUrl('/plugins/bootstrap_fewo/js/bootstrap.min.js') ?>"></script>
+    <script src="<?php echo $this->baseUrl('/plugins/dropdown/js/script.min.js') ?>"></script>
+    <script src="<?php echo $this->baseUrl('/plugins/jquery.touchSwipe/jquery.touchSwipe.min.js') ?>"></script>
+    <script src="<?php echo $this->baseUrl('/js/fewo/script.js') ?>"></script>
+    <script type="text/javascript">
+        <!--
+        $(document).ready(function() {
+            alert('hello');
+            $('#contact_form').submitForm({}, function() {});
+        });
+        //-->
+    </script>
+    <div id="scrollToTop" class="scrollToTop mbr-arrow-up" style="display: none;"><a style="text-align: center;"><i class="mbr-arrow-up-icon"></i></a></div>
+</body>
+</html>

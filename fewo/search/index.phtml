@@ -1,0 +1,211 @@
+<?php echo $this->intContent; ?>
+<script type="text/javascript">
+<!--
+$(document).ready(function() {
+    $('#toggle_refine_search').click(function() {
+        $('#search_filters_inner').slideToggle('normal');
+    });
+
+    <?php if (Default_Model_UserService::i()->getDomainSetting($this->domainId, 'refine_expanded') == 'n') : ?>
+        $('#toggle_refine_search').click();
+    <?php endif; ?>
+});
+//-->
+</script>
+
+<?php
+    $categories = Admin_Model_HorseService::i()->getPublicCategoryOptions();
+    $levels = Admin_Model_HorseService::i()->getLevelOptions();
+    $prices = Admin_Model_HorseService::i()->getPriceOptions($this->domainId);
+    $colors = Admin_Model_HorseService::i()->getColorOptions();
+    $sexes = Admin_Model_HorseService::i()->getSexOptions();
+
+    error_reporting('E_NONE');
+
+    function composeURL($params, $arrayName) {
+        $tempParams = array();
+        foreach ($params as $k=>$v) {
+            $tempParams[] = $arrayName.'['.$k.']='.$v;
+        }
+        $url = implode('&', $tempParams);
+
+        return $url;
+    }
+
+    $pagerParams = composeURL($this->filter, 'filter');
+?>
+
+<div class="box-title"><?php echo Ct_Translate::_('refine_search'); ?> <a href="#" id="toggle_refine_search">&nbsp;</a></div>
+<div id="search_filters">
+    <div id="search_filters_inner">
+    <form id="refine_search_form" action="<?php echo $this->url(array('action' => 'index', 'controller' => 'search', 'module' => 'default', 'language'=>$this->language),'default');?>" method="get">
+    <div class="search-filters-column">
+        <p><label for="fkeywords"><?php echo Ct_Translate::_('keywords'); ?></label></p>
+        <input type="text" name="filter[name]" value="<?php echo $this->escape($this->filter['name']); ?>" />
+        <p><label for="fcategory_id"><?php echo Ct_Translate::_('category'); ?></label></p>
+        <select name="filter[category_id]" id="fcategory_id">
+            <?php foreach ($categories as $k=>$category) : ?>
+                <option value="<?php echo $k; ?>" <?php if ($this->filter['category_id'] == $k) echo 'selected="selected"'; ?>><?php echo $category; ?></option>
+            <?php endforeach; ?>
+        </select>
+
+        <?php
+            $ages = range(0, 30, 1);
+        ?>
+        <p><label for="fage_from"><?php echo Ct_Translate::_('age'); ?></label></p>
+        <label for="fage_from"><?php echo Ct_Translate::_('from'); ?></label>
+        <select name="filter[age_from]" style="width: 60px;" id="fage_from">
+            <option value="-1" <?php if ((!isset($this->filter['age_from'])) || ($this->filter['age_from']==-1)) :?>selected="selected"<?php endif; ?>><?php echo Ct_Translate::_('any'); ?></option>
+            <?php foreach ($ages as $age) : ?>
+                <option value="<?php echo $age; ?>" <?php if ((isset($this->filter['age_from'])) && ($this->filter['age_from'] == $age)) echo 'selected="selected"'; ?>><?php echo $age; ?></option>
+            <?php endforeach; ?>
+        </select>
+        <label for="fage_to"><?php echo Ct_Translate::_('to'); ?></label>
+        <select name="filter[age_to]" style="width: 60px;" id="fage_to">
+            <option value="-1" <?php if ((!isset($this->filter['age_to'])) || ($this->filter['age_to']==-1)) :?>selected="selected"<?php endif; ?>><?php echo Ct_Translate::_('any'); ?></option>
+            <?php foreach ($ages as $age) : ?>
+                <option value="<?php echo $age; ?>" <?php if ((isset($this->filter['age_to'])) && ($this->filter['age_to'] == $age)) echo 'selected="selected"'; ?>><?php echo $age; ?></option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+    <div class="search-filters-column">
+        <p><label for="flevel_from"><?php echo Ct_Translate::_('level'); ?></label></p>
+        <label for="flevel_from"><?php echo Ct_Translate::_('from'); ?></label>
+        <select name="filter[level_from]" style="width: 60px;" id="flevel_from">
+            <option value="-1"><?php echo Ct_Translate::_('any'); ?></option>
+            <?php foreach ($levels as $k=>$level) : ?>
+                <option value="<?php echo $k; ?>" <?php if ($this->filter['level_from'] == (string)$k) echo 'selected="selected"'; ?>><?php echo $level; ?></option>
+            <?php endforeach; ?>
+        </select>
+        <label for="flevel_to"><?php echo Ct_Translate::_('to'); ?></label>
+        <select name="filter[level_to]" style="width: 60px;" id="flevel_to">
+            <option value="-1"><?php echo Ct_Translate::_('any'); ?></option>
+            <?php foreach ($levels as $k=>$level) : ?>
+                <option value="<?php echo $k; ?>" <?php if ($this->filter['level_to'] == (string)$k) echo 'selected="selected"'; ?>><?php echo $level; ?></option>
+            <?php endforeach; ?>
+        </select>
+
+        <p><label for="fprice_id"><?php echo Ct_Translate::_('price_range'); ?></label></p>
+        <select name="filter[price_id]" id="fprice_id">
+            <option value="-1"><?php echo Ct_Translate::_('any'); ?></option>
+            <?php foreach ($prices as $k=>$price) : ?>
+                <option value="<?php echo $k; ?>" <?php if ($this->filter['price_id'] == (string)$k) echo 'selected="selected"'; ?>><?php echo $price; ?></option>
+            <?php endforeach; ?>
+        </select>
+
+        <p><label for="fsuccessful_from"><?php echo Ct_Translate::_('successful_to'); ?></label></p>
+        <label for="fsuccessful_from"><?php echo Ct_Translate::_('from'); ?></label>
+        <select name="filter[successful_from]" style="width: 60px;" id="fsuccessful_from">
+            <option value="-1"><?php echo Ct_Translate::_('any'); ?></option>
+            <?php foreach ($levels as $k=>$level) : ?>
+                <option value="<?php echo $k; ?>" <?php if ($this->filter['successful_from'] === (string)$k) echo 'selected="selected"'; ?>><?php echo $level; ?></option>
+            <?php endforeach; ?>
+        </select>
+        <label for="fsuccessful_to"><?php echo Ct_Translate::_('to'); ?></label>
+        <select name="filter[successful_to]" style="width: 60px;" id="fsuccessful_to">
+            <option value="-1"><?php echo Ct_Translate::_('any'); ?></option>
+            <?php foreach ($levels as $k=>$level) : ?>
+                <option value="<?php echo $k; ?>" <?php if ($this->filter['successful_to'] === (string)$k) echo 'selected="selected"'; ?>><?php echo $level; ?></option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+    <div class="search-filters-column">
+        <p><label for="fcolor"><?php echo Ct_Translate::_('color'); ?></label></p>
+        <select name="filter[color]" id="fcolor">
+            <option value="-1"><?php echo Ct_Translate::_('any'); ?></option>
+            <?php foreach ($colors as $k=>$color) : ?>
+                <option value="<?php echo $k; ?>" <?php if ($this->filter['color'] == (string)$k) echo 'selected="selected"'; ?>><?php echo $color; ?></option>
+            <?php endforeach; ?>
+        </select>
+
+        <p><label for="fsex"><?php echo Ct_Translate::_('sex'); ?></label></p>
+        <select name="filter[sex]" id="fsex">
+            <option value="-1"><?php echo Ct_Translate::_('any'); ?></option>
+            <?php foreach ($sexes as $k=>$sex) : ?>
+                <option value="<?php echo $k; ?>" <?php if ($this->filter['sex'] == (string)$k) echo 'selected="selected"'; ?>><?php echo $sex; ?></option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+    <div class="al-clear"></div>
+    <p class="refine-search-buttons">
+        <input type="submit" value="<?php echo Ct_Translate::_('search'); ?>" class="refine-search-button" />
+    </p>
+    </form>
+    </div>
+</div>
+<div class="al-clear"></div>
+<?php $categories = Admin_Model_HorseService::i()->getCategoryOptions(); ?>
+<div class="box-title"><?php echo Ct_Translate::_('search_results'); ?></div>
+<div id="search_results_list">
+    <table class="search_results_table">
+        <thead>
+            <tr>
+                <td colspan="3">
+                <?php echo $this->paginationControl($this->paginator,
+                                        'Sliding',
+                                        '_pagination.phtml',
+                                        array('controller'=>$this->controller, 'module'=>$this->module, 'action'=>$this->slug, 'params'=>$pagerParams)); ?></td>
+            </tr>
+            <tr><td colspan="3" class="dotted-row"></td></tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <td colspan="3">
+                <?php echo $this->paginationControl($this->paginator,
+                                        'Sliding',
+                                        '_pagination.phtml',
+                                        array('controller'=>$this->controller, 'module'=>$this->module, 'action'=>$this->slug, 'params'=>$pagerParams)); ?></td>
+            </tr>
+        </tfoot>
+        <?php if (count($this->paginator)): ?>
+        <tbody>
+            <?php foreach ($this->paginator as $item): ?>
+            <tr>
+                <td class="photo">
+                    <?php $seoText = Ct_Translate::_($categories[$item['category_id']]).' '.Ct_Translate::_('from').' '.$this->escape($item['father']).' x '.$this->escape($item['mothers_father']); ?>
+                    <a href="<?php echo $this->url(array('id' => $item['id'], 'title' => str_replace(array('/', ' '), array('-', '-'), $seoText), 'category'=>Ct_Translate::_($categories[$item['category_id']])), 'horseml'); ?>">
+                    <?php if ($item['filename']) : ?>
+                        <img src="<?php echo $this->baseUrl('/uploads/photos/thumbs/'.$item['filename']); ?>" alt="<?php echo $seoText; ?>" title="<?php echo $seoText; ?>" />
+                    <?php else: ?>
+                        <img src="<?php echo $this->baseUrl('/img/default/no-preview-small.png');?>" alt="<?php echo $seoText; ?>" title="<?php echo $seoText; ?>" />
+                    <?php endif; ?>
+                    </a>
+                </td>
+                <td class="info">
+                    <p><a class="search-results-category" href="<?php echo $this->url(array('id' => $item['id'], 'title' => str_replace(array('/', ' '), array('-', '-'), $seoText), 'category'=>Ct_Translate::_($categories[$item['category_id']])), 'horseml'); ?>"><?php echo $categories[$item['category_id']]; ?></a></p>
+                    <p><strong><?php echo Ct_Translate::_('name'); ?>:</strong> <?php echo $this->escape($item['name']); ?></p>
+                    <p><strong><?php echo Ct_Translate::_('age'); ?>:</strong> <?php echo (date("Y") - $this->escape($item['age'])); ?></p>
+                    <?php
+                        $height = $item['height'].Ct_Translate::_('cm');
+                        if ($this->language == 'en') {
+                            $height = number_format($item['height']*0.0984, 2).' '.Ct_Translate::_('hands');
+                        }
+                    ?>
+                    <p><strong><?php echo Ct_Translate::_('height'); ?>:</strong> <?php echo $height; ?></p>
+                    <p><strong><?php echo Ct_Translate::_('level'); ?>:</strong> <?php echo $levels[$item['level']]; ?></p>
+                </td>
+                <td>
+                    <p style="text-align: right;">
+                        <?php if ($item['filename']) : ?>
+                        <a href="<?php echo $this->url(array('id' => $item['id'], 'title' => str_replace(array('/', ' '), array('-', '-'), $seoText), 'category'=>Ct_Translate::_($categories[$item['category_id']])), 'horseml'); ?>#photos"><img src="<?php echo $this->baseUrl('/img/default/photos.png');?>" alt="photos" /></a>
+                        <?php endif; ?>
+
+                        <?php if ($item['video_id']) : ?>
+                        <a href="<?php echo $this->url(array('id' => $item['id'], 'title' => str_replace(array('/', ' '), array('-', '-'), $seoText), 'category'=>Ct_Translate::_($categories[$item['category_id']])), 'horseml'); ?>#videos"><img src="<?php echo $this->baseUrl('/img/default/videos.png');?>" alt="videos" /></a>
+                        <?php endif; ?>
+                    </p>
+                    <p style="text-align: justify; margin: 10px;">
+                    <?php if ($this->language == 'de') : ?>
+                        <?php echo $this->escape($item['description']); ?>
+                    <?php else: ?>
+                        <?php echo $this->escape($item['description_en']); ?>
+                    <?php endif; ?>
+                    </p>
+                </td>
+            </tr>
+            <tr><td colspan="3" class="dotted-row"></td></tr>
+            <?php endforeach; ?>
+        </tbody>
+        <?php endif; ?>
+    </table>
+</div>

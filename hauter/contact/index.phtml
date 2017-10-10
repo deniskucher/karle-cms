@@ -1,0 +1,70 @@
+<div class="separate-page-header">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-offset-1 col-xs-10">
+				
+				<h1>HAUTER SPORTHORSES</h1>
+                <h3>Steffen Hauter</h3>
+                <div class="article-separate-page">
+                    <p>Grosssteinhausermuehle 2</p>
+                    <p>66484 Grosssteinhausen</p>
+                    <p>Germany</p>
+                </div>
+                <div class="article-separate-page">
+                    <p><?php echo Ct_Translate::_('mobile'); ?>: +49 (0) 163 281 7106 </p>
+                    <p><?php echo Ct_Translate::_('phone'); ?>: +49 (0) 6339 281</p>
+                </div>
+                <div class="article-separate-page">
+                    <p>info@hauter-sporthorses.com</p>
+                </div>
+				
+			</div>
+			<div class="article-separate-page">
+				<div class="row">
+					<div class="col-xs-offset-1 col-xs-10">
+						<p><h1><?php echo Ct_Translate::_('contact'); ?></h1></p>
+						<form novalidate action="<?php echo $this->url(array('controller'=>'contact', 'action'=>'send', 'module'=>'default'), 'default');?>" method="post" data-form-title="Kontakt" id="contact_form">
+
+						    <div class="row row-sm-offset">
+
+						        <div class="col-xs-12 col-md-4">
+						            <div class="form-group">
+						                <label class="form-control-label" for="form1-i-name"><?php echo Ct_Translate::_('name'); ?><span class="form-asterisk">*</span></label>
+						                <input class="form-control" name="name" required="" data-form-field="Name" id="form1-i-name" type="text">
+						                <div id="id_name" class="at-error-msg"></div>
+						            </div>
+						        </div>
+
+						        <div class="col-xs-12 col-md-4">
+						            <div class="form-group">
+						                <label class="form-control-label" for="form1-i-email"><?php echo Ct_Translate::_('email'); ?><span class="form-asterisk">*</span></label>
+						                <input class="form-control" name="email" required="" data-form-field="Email" id="form1-i-email" type="email">
+						                <div id="id_email" class="at-error-msg"></div>
+						            </div>
+						        </div>
+
+						        <div class="col-xs-12 col-md-4">
+						            <div class="form-group">
+						                <label class="form-control-label" for="form1-i-phone"><?php echo Ct_Translate::_('phone'); ?></label>
+						                <input class="form-control" name="phone" data-form-field="Phone" id="form1-i-phone" type="tel">
+						            </div>
+						        </div>
+
+						    </div>
+
+						    <div class="form-group">
+						        <label class="form-control-label" for="form1-i-message"><?php echo Ct_Translate::_('message'); ?></label>
+						        <textarea class="form-control" name="message" rows="7" data-form-field="Message" id="form1-i-message"></textarea>
+						    </div>
+
+						    <div><button type="submit" class="btn btn-primary submitform"><span class="btn-text"><?php echo Ct_Translate::_('sendmessage'); ?></span><i class="btn-loader"></i></button></div>
+
+						</form>
+						
+					</div>	
+				</div>
+			</div>	
+		</div>
+	</div>
+</div>
+

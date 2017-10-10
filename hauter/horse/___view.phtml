@@ -1,0 +1,162 @@
+<?php
+    $levels = Admin_Model_HorseService::i()->getLevelOptions();
+    $prices = Admin_Model_HorseService::i()->getPriceOptions($this->domainId);
+    $colors = Admin_Model_HorseService::i()->getColorOptions();
+    $sexes = Admin_Model_HorseService::i()->getSexOptions();
+
+    $this->headScript()->prependFile($this->baseUrl('/js/view-details.js'));
+    $this->headScript()->prependFile($this->baseUrl('/js/uploadify/swfobject.js'))
+					   ->appendFile($this->baseUrl('/js/flowplayer/flowplayer-3.2.4.min.js'))
+                       ->appendFile($this->baseUrl('/js/jquery.lightbox-0.5.min.js'));
+    $this->headLink()->prependStylesheet($this->baseUrl('/css/jquery/lightbox/jquery.lightbox-0.5.css'));
+?>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('.box-tab').click(function() {
+        var tab = $(this).attr('tab');
+        if (tab == 'back') {
+            location.href = '<?php echo $this->url(array('action' => 'index', 'controller' => 'search', 'module' => 'default'),'default');?>?filter[category_id]=<?php echo $this->horse['category_id']; ?>';
+            return;
+        }
+
+        $('.horse-details-tab-box').hide();
+        $('.box-tab').removeClass('selected-tab');
+        $(this).addClass('selected-tab');
+        
+        $('#'+tab+'Box').show();
+        location.hash = tab;
+
+        if (tab == 'videos') {
+            $('#horse-details-videos-list li img:first').click();
+        }
+    });
+
+    if ((!location.hash) || (location.hash == '#details')) {
+        $('div[tab="details"]').click();
+    } else if (location.hash == '#videos') {
+        $('div[tab="videos"]').click();
+    } else if (location.hash == '#photos') {
+        $('div[tab="photos"]').click();
+    }
+});
+</script>
+
+<input type="hidden" id="flowplayer_path" value="<?php echo $this->baseUrl('/js/flowplayer/flowplayer-3.2.5.swf'); ?>" />
+<input type="hidden" id="sd_videos_path" value="<?php echo $this->baseUrl('/uploads/videos/sd/'); ?>" />
+<h1><?php echo $this->horse['age'].'-'.Ct_Translate::_(($this->horse['sex']?'years_old':'years_old_mare')).' '.Ct_Translate::_($sexes[$this->horse['sex']]).' '.Ct_Translate::_('from').' '.$this->escape($this->horse['father']); ?></h1>
+<br />
+<div id="details-tabs">
+    <div class="box-tab" tab="back"><?php echo Ct_Translate::_('back_to_list'); ?></div><div class="box-tab selected-tab" tab="details"><?php echo Ct_Translate::_('details'); ?></div><div class="box-tab" tab="videos"><?php echo count($this->horse['videos']); ?> <?php echo Ct_Translate::_('videos'); ?></div><div class="box-tab" tab="photos"><?php echo count($this->horse['photos']); ?> <?php echo Ct_Translate::_('photos'); ?></div>
+</div>
+<div class="horse-details-info">
+    
+    <div id="videosBox" class="horse-details-tab-box">
+        <div id="video-player" style="position: relative;">
+            <a href="#" style="display:block;width:780px;height:495px;margin:auto;" id="player"></a>
+            <?php if ($this->watermarkText) : ?>
+                <p style="position: absolute; top: 30px; left: 50px; color: #fff; font-size: 20px;"><?php echo $this->escape($this->watermarkText); ?></p>
+            <?php endif; ?>
+        </div>
+        <ul id="horse-details-videos-list">
+            <?php foreach ($this->horse['videos'] as $k=>$v) : ?>
+            <li><a href="#"><img class="play-video" video="360-<?php echo $v['filename'].'.flv'; ?>" src="<?php echo $this->baseUrl('/uploads/videos/thumbs/'.$v['filename'].'.jpg'); ?>" alt="Horse video thumbnail" /></a></li>
+            <?php endforeach; ?>
+        </ul>
+        <div class="al-clear"></div>
+    </div>
+    
+    <div id="photosBox" class="horse-details-tab-box">
+        <?php if (count($this->horse['photos'])) : ?>
+        <ul class="horse-details-photos-list">
+            <?php foreach ($this->horse['photos'] as $k=>$v) : ?>
+            <li><a href="<?php echo $this->baseUrl('/uploads/photos/large/'.$v['filename']); ?>" ><img src="<?php echo $this->baseUrl('/uploads/photos/thumbs/'.$v['filename']); ?>" alt="Horse thumbnail" photo_index="<?php echo $k; ?>" /></a></li>
+            <?php endforeach; ?>
+        </ul>
+        <div class="al-clear"></div>
+        <?php endif; ?>
+    </div>
+
+    <div id="detailsBox" class="horse-details-tab-box">
+    <?php if ($this->horse['filename']) : ?>
+    <div class="horse-details-image">
+        <?php $seoText = Ct_Translate::_($this->horse['category']).' '.Ct_Translate::_('from').' '.$this->escape($this->horse['father']).' x '.$this->escape($this->horse['mothers_father']); ?>
+        <img src="<?php echo $this->baseUrl('/uploads/photos/large/'.$this->horse['filename']); ?>" alt="<?php echo $seoText; ?>" title="<?php echo $seoText; ?>" width="400" />
+
+        <p class="horse-details-tags-list">
+            <?php
+            $tags = Admin_Model_TagService::i()->getTags($this->domainId);
+
+            if (!function_exists('composeURL')) {
+                function composeURL($params, $arrayName) {
+                    $tempParams = array();
+                    foreach ($params as $k=>$v) {
+                        $tempParams[] = $arrayName.'['.$k.']='.$v;
+                    }
+                    $url = implode('&', $tempParams);
+
+                    return $url;
+                }
+            }
+            foreach ($tags as $tag) : ?>
+                    <?php $filterParams = composeURL(unserialize($tag['data']), 'filter'); ?>
+                    <a href="<?php echo $this->url(array('tag'=>$tag['tag_'.$this->language], 'tag_id'=>$tag['id']),'tagml'); ?>"><?php echo $this->escape($tag['tag_'.$this->language]); ?></a>
+                    &nbsp; &nbsp;
+            <?php endforeach; ?>
+        </p>
+    </div>
+    <?php endif; ?>
+    <div class="<?php if ($this->showSidebar) : ?>horse-details-text<?php else: ?>horse-details-text-wide<?php endif; ?>">
+        <div class="horses-details-info-left">
+            <?php if ($this->horse['name']) : ?>
+                <p><span class="horses-details-label"><?php echo Ct_Translate::_('name'); ?>:</span> <?php echo $this->escape($this->horse['name']); ?></p>
+            <?php endif; ?>
+            <p><span class="horses-details-label"><?php echo Ct_Translate::_('category'); ?>:</span> <?php echo $this->escape($this->horse['category']); ?></p>
+            
+            <p><span class="horses-details-label"><?php echo Ct_Translate::_('sex'); ?>:</span> <?php echo $sexes[$this->horse['sex']]; ?></p>
+            
+            
+            <p><span class="horses-details-label"><?php echo Ct_Translate::_('breeding_area'); ?>:</span> <?php echo $this->escape($this->horse['breeding_area']); ?></p>
+            
+            <p><span class="horses-details-label"><?php echo Ct_Translate::_('level'); ?>:</span> <?php echo $levels[$this->horse['level']]; ?></p>
+            
+            <p><span class="horses-details-label"><?php echo Ct_Translate::_('price_range'); ?>:</span> <?php echo $prices[$this->horse['price_id']]; ?></p>
+            
+        </div>
+        <div class="horses-details-info-right">
+            <p><span class="horses-details-label"><?php echo Ct_Translate::_('age'); ?>:</span> <?php echo ($this->horse['age']); ?></p>
+            <p><span class="horses-details-label"><?php echo Ct_Translate::_('color'); ?>:</span> <?php echo $colors[$this->horse['color']]; ?></p>
+            <?php
+                $height = $this->horse['height'].Ct_Translate::_('cm');
+                if ($this->language == 'en') {
+                    $height = number_format($this->horse['height']*0.0984, 2).' '.Ct_Translate::_('hands');
+                }
+            ?>
+            <p><span class="horses-details-label"><?php echo Ct_Translate::_('height'); ?>:</span> <?php echo $this->escape($height); ?></p>
+            <p><span class="horses-details-label"><?php echo Ct_Translate::_('successful_to'); ?>:</span> <?php echo $levels[$this->horse['successful_to']]; ?></p>
+        </div>
+        <div class="al-clear"></div>
+
+        <div class="horses-details-info-block">
+            <p><span class="horses-details-label"><?php echo Ct_Translate::_('father'); ?>:</span> <?php echo $this->escape($this->horse['father']); ?></p>
+            <p><span class="horses-details-label"><?php echo Ct_Translate::_('mothers_father'); ?>:</span> <?php echo $this->escape($this->horse['mothers_father']); ?></p>
+        </div>
+
+        <div class="horses-details-info-block">
+            <p class="horses-details-label"><?php echo Ct_Translate::_('description'); ?></p>
+            <?php if ($this->language == 'de') : ?>
+                <p style="text-align: justify;"><?php echo nl2br($this->escape($this->horse['description'])); ?></p>
+            <?php else : ?>
+                <p style="text-align: justify;"><?php echo nl2br($this->escape($this->horse['description_en'])); ?></p>
+            <?php endif; ?>
+            <br />
+            <p class="horses-details-label"><?php echo Ct_Translate::_('successes'); ?></p>
+            <?php if ($this->language == 'de') : ?>
+                <p style="text-align: justify;"><?php echo nl2br($this->escape($this->horse['successes'])); ?></p>
+            <?php else : ?>
+                <p style="text-align: justify;"><?php echo nl2br($this->escape($this->horse['successes_en'])); ?></p>
+            <?php endif; ?>
+        </div>
+    </div>
+    <div class="al-clear"></div>
+    </div>
+</div>
